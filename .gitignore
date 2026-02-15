@@ -25,5 +25,5 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
-/storage
+/storage/logs
 /.claude
