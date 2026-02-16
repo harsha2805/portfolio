@@ -32,9 +32,18 @@ const techLogos = [
 
 export default function About() {
     return (
-        <Section id="about" title="About" className="bg-neutral-900/50">
+        <Section id="about" className="bg-neutral-900/50">
             <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
                 <div className="space-y-8 lg:col-span-7">
+                    <div className="mb-8">
+                        <span className="mb-2 block text-xs font-bold uppercase tracking-[0.2em] text-neutral-500">
+                            ABOUT
+                        </span>
+                        <h2 className="text-4xl font-bold text-white md:text-5xl">
+                            Who I Am
+                        </h2>
+                    </div>
+
                     <div className="text-2xl font-light leading-snug text-neutral-300 md:text-3xl flex flex-wrap items-center gap-x-2">
                         <span>Building digital products that are</span>
                         <div className="inline-flex min-w-[150px] items-center font-bold text-white">

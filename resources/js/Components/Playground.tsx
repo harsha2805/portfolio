@@ -1,188 +1,112 @@
+import Section from '@/Components/Section';
+import { FiCpu, FiFolder, FiTerminal, FiArrowRight } from 'react-icons/fi';
+import AnimatedList from './AnimatedList';
 
-import { FiGithub, FiTerminal, FiCpu, FiFolder, FiX, FiExternalLink } from 'react-icons/fi';
-import CircularGallery from './CircularGallery';
-import { useState } from 'react';
-import { AnimatePresence, motion } from 'motion/react';
-
+// Your "Script" Data
 const experiments = [
     {
-        image: 'https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?q=80&w=2070&auto=format&fit=crop',
-        text: 'BERR',
-        link: 'https://berr.in',
-        description: 'A real-world project built for modern logistics. BERR simplifies delivery management with smart tracking and routing.',
-        tech: 'Laravel / Vue / Mapbox',
-        icon: <FiFolder />
+        id: 1,
+        title: "Image to PPTX",
+        tech: "Python Automation",
+        desc: "Stitches folder images into slides automatically.",
+        link: "https://github.com/harsha2805/imageToPptx",
+        icon: <FiCpu />,
     },
     {
-        image: 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?q=80&w=2070&auto=format&fit=crop',
-        text: 'Web Scripts',
-        link: 'https://www.webdevelopmentscripts.com',
-        description: 'A curated collection of essential web development scripts and utilities for developers.',
-        tech: 'JS / Node',
-        icon: <FiTerminal />
+        id: 2,
+        title: "Junk File Organizer",
+        tech: "OS / FileSystem",
+        desc: "Instantly sorts massive file dumps by extension.",
+        link: "https://github.com/harsha2805/junkFileOrganizer",
+        icon: <FiFolder />,
     },
     {
-        image: 'https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?q=80&w=2070&auto=format&fit=crop',
-        text: 'Image to PPTX',
-        link: 'https://github.com/harsha2805/imageToPptx',
-        description: 'Automated Python script to stitch folder images into presentation slides instantly.',
-        tech: 'Python',
-        icon: <FiCpu />
-    },
-    {
-        image: 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?q=80&w=2070&auto=format&fit=crop',
-        text: 'File Organizer',
-        link: 'https://github.com/harsha2805/junkFileOrganizer',
-        description: 'System utility that instantly sorts massive file dumps by extension type.',
-        tech: 'Python / OS',
-        icon: <FiFolder />
-    },
-    {
-        image: 'https://images.unsplash.com/photo-1526628953301-3e5f7702a5f5?q=80&w=2070&auto=format&fit=crop',
-        text: 'Valuation AI',
-        link: 'https://github.com/harsha2805/smartUsedCarValuation',
-        description: 'Predictive model for used car pricing using regression analysis.',
-        tech: 'Jupyter / ML',
-        icon: <FiTerminal />
-    },
-    // Duplicates for infinite scroll feel
-    {
-        image: 'https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?q=80&w=2070&auto=format&fit=crop',
-        text: 'BERR',
-        link: 'https://berr.in',
-        description: 'A real-world project built for modern logistics.',
-        tech: 'Laravel / Vue',
-        icon: <FiFolder />
-    },
-    {
-        image: 'https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?q=80&w=2070&auto=format&fit=crop',
-        text: 'Web Scripts',
-        link: 'https://www.webdevelopmentscripts.com',
-        description: 'Curated web dev scripts.',
-        tech: 'JS / Node',
-        icon: <FiTerminal />
-    },
+        id: 3,
+        title: "Smart Valuation AI",
+        tech: "Machine Learning",
+        desc: "Predictive model for pricing using regression.",
+        link: "https://github.com/harsha2805/smartUsedCarValuation",
+        icon: <FiTerminal />,
+    }
 ];
 
-interface Project {
-    image: string;
-    text: string;
-    link: string;
-    description?: string;
-    tech?: string;
-    icon?: React.ReactNode;
-}
-
 export default function Playground() {
-    const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-
-    const handleProjectClick = (item: Project) => {
-        setSelectedProject(item);
-    };
-
     return (
-        <section id="playground" className="bg-black py-32 border-t border-neutral-900 overflow-hidden">
-            <div className="container mx-auto px-4">
+        <Section id="playground" className="bg-black py-24 border-t border-neutral-900">
+            <div className="container mx-auto px-4 max-w-5xl">
 
-                {/* Header */}
-                <div className="mb-8 flex items-end justify-between relative z-10 pointer-events-none">
-                    <div className="pointer-events-auto">
-                        <span className="mb-2 block text-xs font-bold uppercase tracking-[0.3em] text-[#0078D4]">
-                            The Lab
-                        </span>
-                        <h2 className="text-4xl font-black uppercase tracking-tighter text-white md:text-5xl">
-                            Code <span className="text-neutral-600">Playground</span>
-                        </h2>
-                    </div>
-
-                    <a
-                        href="https://github.com/harsha2805"
-                        target="_blank"
-                        rel="noreferrer"
-                        className="hidden md:flex pointer-events-auto items-center gap-2 text-sm font-mono text-neutral-400 hover:text-white transition-colors"
-                    >
-                        <FiGithub /> github.com/harsha2805
-                    </a>
+                {/* Styled Header */}
+                <div className="mb-16">
+                    <span className="mb-2 block text-xs font-bold uppercase tracking-[0.2em] text-neutral-500">
+                        PLAYGROUND
+                    </span>
+                    <h2 className="text-4xl font-bold text-white md:text-5xl">
+                        Code Experiments
+                    </h2>
                 </div>
-            </div>
 
-            {/* Circular Gallery Container - Full Width */}
-            <div style={{ height: '600px', position: 'relative' }}>
-                <CircularGallery
+                {/* The Animated List */}
+                <AnimatedList
                     items={experiments}
-                    bend={1}
-                    textColor="#ffffff"
-                    borderRadius={0.05}
-                    scrollEase={0.05}
-                    onItemClick={handleProjectClick}
-                />
-            </div>
-
-            {/* Project Details Modal */}
-            <AnimatePresence>
-                {selectedProject && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
-                        {/* Backdrop */}
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            onClick={() => setSelectedProject(null)}
-                            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
-                        />
-
-                        {/* Modal Card */}
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                            className="relative w-full max-w-lg overflow-hidden rounded-2xl bg-[#0a0a0a] border border-neutral-800 shadow-2xl ring-1 ring-white/10"
+                    className="w-full"
+                    displayScrollbar={false}
+                    enableArrowNavigation={true}
+                    renderItem={(exp, index, isSelected) => (
+                        <a
+                            href={exp.link}
+                            target="_blank"
+                            rel="noreferrer"
+                            className={`group relative flex items-center justify-between overflow-hidden rounded-lg border p-6 transition-all 
+                                ${isSelected
+                                    ? 'bg-neutral-800 border-[#0078D4]/50 shadow-[0_0_20px_rgba(0,120,212,0.1)]'
+                                    : 'bg-neutral-900/40 border-white/5 hover:bg-neutral-800 hover:border-[#0078D4]/30'
+                                }
+                            `}
                         >
-                            {/* Close Button */}
-                            <button
-                                onClick={() => setSelectedProject(null)}
-                                className="absolute right-4 top-4 z-10 rounded-full bg-black/50 p-2 text-white hover:bg-white/10 transition-colors"
-                            >
-                                <FiX />
-                            </button>
-
-                            {/* Image Header */}
-                            <div className="h-48 w-full overflow-hidden relative">
-                                <img
-                                    src={selectedProject.image}
-                                    alt={selectedProject.text}
-                                    className="h-full w-full object-cover opacity-80"
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] to-transparent" />
-                            </div>
-
-                            {/* Content */}
-                            <div className="p-8 relative -mt-12">
-                                <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/10 px-3 py-1 text-xs font-medium text-blue-400">
-                                    {selectedProject.tech || 'Project'}
+                            {/* Left Side: Icon & Info */}
+                            <div className="flex items-center gap-6">
+                                {/* Icon Box */}
+                                <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded bg-black border border-neutral-800 transition-colors
+                                    ${isSelected ? 'text-white bg-[#0078D4]' : 'text-[#0078D4] group-hover:bg-[#0078D4] group-hover:text-white'}
+                                `}>
+                                    {exp.icon}
                                 </div>
 
-                                <h3 className="mb-3 text-3xl font-bold text-white">
-                                    {selectedProject.text}
-                                </h3>
-
-                                <p className="mb-8 text-neutral-400 leading-relaxed">
-                                    {selectedProject.description || "A cool project from the lab."}
-                                </p>
-
-                                <a
-                                    href={selectedProject.link}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="flex items-center justify-center gap-2 w-full rounded-xl bg-blue-600 px-6 py-4 font-bold text-white transition-all hover:bg-blue-500 hover:shadow-lg hover:shadow-blue-500/20"
-                                >
-                                    View Project <FiExternalLink />
-                                </a>
+                                <div>
+                                    <h3 className={`text-lg font-bold transition-colors ${isSelected ? 'text-[#0078D4]' : 'text-white group-hover:text-[#0078D4]'}`}>
+                                        {exp.title}
+                                    </h3>
+                                    <div className="flex items-center gap-3">
+                                        <span className="text-xs font-mono text-[#0078D4]">
+                                            {exp.tech}
+                                        </span>
+                                        <span className="hidden sm:inline-block text-xs text-neutral-500">•</span>
+                                        <span className="hidden sm:inline-block text-sm text-neutral-400">
+                                            {exp.desc}
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
-                        </motion.div>
-                    </div>
-                )}
-            </AnimatePresence>
-        </section>
+
+                            {/* Right Side: Arrow & Mobile Desc */}
+                            <div className="flex items-center gap-4">
+                                <span className="block sm:hidden text-xs text-neutral-500 max-w-[100px] truncate">
+                                    {exp.desc}
+                                </span>
+                                <FiArrowRight className={`transition-transform text-neutral-600 ${isSelected ? 'translate-x-1 text-white' : 'group-hover:translate-x-1 group-hover:text-white'}`} />
+                            </div>
+                        </a>
+                    )}
+                />
+
+                {/* Footer Link */}
+                <div className="mt-8 text-center">
+                    <a href="https://github.com/harsha2805" className="text-xs font-mono text-neutral-600 hover:text-white transition-colors">
+                        View all repositories →
+                    </a>
+                </div>
+
+            </div>
+        </Section>
     );
 }
