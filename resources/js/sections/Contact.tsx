@@ -1,5 +1,6 @@
 import DecryptedText from '@/components/ui/DecryptedText';
 import GradientHeading from '@/components/ui/GradientHeading';
+import PixelSnow from '@/components/ui/PixelSnow';
 import { motion } from 'motion/react';
 import { useState } from 'react';
 
@@ -41,8 +42,21 @@ export default function Contact() {
     };
 
     return (
-        <section id="contact" className="py-32 px-6 bg-[#050505]">
-            <div className="max-w-5xl mx-auto">
+        <section id="contact" className="relative py-32 px-6 bg-[#050505] overflow-hidden">
+            {/* Pixel Snow background */}
+            <div className="absolute inset-0 pointer-events-none">
+                <PixelSnow
+                    color="#a855f7"
+                    density={0.18}
+                    speed={0.8}
+                    brightness={1.2}
+                    variant="snowflake"
+                    pixelResolution={180}
+                    depthFade={10}
+                />
+            </div>
+
+            <div className="relative max-w-5xl mx-auto">
                 <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     whileInView={{ opacity: 1, x: 0 }}
@@ -51,7 +65,7 @@ export default function Contact() {
                     className="mb-4"
                 >
                     <span className="text-xs font-mono text-purple-400/60 tracking-[0.3em] uppercase">
-                        05 / Contact
+                        06 / Contact
                     </span>
                 </motion.div>
 
@@ -70,7 +84,8 @@ export default function Contact() {
                         className="space-y-8"
                     >
                         <p className="text-white/60 leading-relaxed">
-                            I'm open to freelance projects, full-time roles, and interesting collaborations. Drop me a line and let's talk.
+                            {/* I'm open to freelance projects, full-time roles, and interesting collaborations.  */}
+                            Drop me a line and let's talk.
                         </p>
 
                         <div className="space-y-4">
@@ -178,7 +193,7 @@ export default function Contact() {
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.4 }}
-                className="max-w-5xl mx-auto mt-24 pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4"
+                className="relative max-w-5xl mx-auto mt-24 pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4"
             >
                 <span className="text-xs font-mono text-white/20">
                     © {new Date().getFullYear()} Harshavardhan C
