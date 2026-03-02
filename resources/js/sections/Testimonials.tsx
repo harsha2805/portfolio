@@ -45,7 +45,7 @@ export default function Testimonials() {
     const t = testimonials[current];
 
     return (
-        <section className="py-24 px-6 bg-[#050505]">
+        <section id="testimonials" className="py-24 px-6 bg-[#050505]">
             <div className="max-w-5xl mx-auto">
                 {/* Section label */}
                 <motion.div

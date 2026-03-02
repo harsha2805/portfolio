@@ -6,6 +6,7 @@ import Projects from '@/sections/Projects';
 import Testimonials from '@/sections/Testimonials';
 import Contact from '@/sections/Contact';
 import Loader from '@/components/Loader';
+import Nav from '@/components/Nav';
 import { motion } from 'motion/react';
 import { useState } from 'react';
 
@@ -22,6 +23,7 @@ export default function Portfolio() {
         <>
             {!loaded && <Loader onDone={() => setLoaded(true)} />}
 
+            <Nav />
             <motion.main
                 className="bg-[#050505] antialiased"
                 initial={{ opacity: 0 }}

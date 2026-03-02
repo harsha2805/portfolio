@@ -22,4 +22,17 @@ export default defineConfig({
             '@': '/resources/js',
         },
     },
+    build: {
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    'vendor-react':  ['react', 'react-dom', 'react-router-dom'],
+                    'vendor-motion': ['motion/react'],
+                    'vendor-three':  ['three'],
+                    'vendor-ogl':    ['ogl'],
+                    'vendor-cobe':   ['cobe'],
+                },
+            },
+        },
+    },
 });

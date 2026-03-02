@@ -133,6 +133,19 @@
   body {
     @apply bg-background text-foreground;
     }
+  html {
+    scroll-behavior: smooth;
+    }
+}
+
+@keyframes star-movement-bottom {
+    0%   { transform: translate(0%, 0%);    opacity: 1; }
+    100% { transform: translate(-100%, 0%); opacity: 0; }
+}
+
+@keyframes star-movement-top {
+    0%   { transform: translate(0%, 0%);   opacity: 1; }
+    100% { transform: translate(100%, 0%); opacity: 0; }
 }
 
 @keyframes marquee {
@@ -156,4 +169,54 @@
 .animate-marquee:hover,
 .animate-marquee-reverse:hover {
     animation-play-state: paused;
+}
+
+/* ── PillNav dark-theme overrides ── */
+.pill-nav-container {
+    position: relative !important;
+    top: auto !important;
+}
+
+.pill-nav-items {
+    background: rgba(8, 8, 8, 0.82) !important;
+    backdrop-filter: blur(14px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 4px 32px rgba(0, 0, 0, 0.5) !important;
+}
+
+.pill-logo {
+    background: rgba(8, 8, 8, 0.9) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    margin-right: 6px;
+}
+
+.pill {
+    font-size: 12px !important;
+    letter-spacing: 0.06em !important;
+}
+
+.pill.is-active::after {
+    background: #6c2ff2 !important;
+}
+
+.mobile-menu-button {
+    background: rgba(8, 8, 8, 0.9) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.mobile-menu-popover {
+    background: rgba(8, 8, 8, 0.95) !important;
+    backdrop-filter: blur(14px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6) !important;
+}
+
+.mobile-menu-popover .mobile-menu-link {
+    background-color: transparent !important;
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.mobile-menu-popover .mobile-menu-link:hover {
+    background-color: rgba(108, 47, 242, 0.2) !important;
+    color: #ffffff !important;
 }

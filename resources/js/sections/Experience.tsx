@@ -51,7 +51,7 @@ export default function Experience() {
     const dot1Opacity = useTransform(progress, [0.4, 0.9], [0.25, 1]);
 
     return (
-        <div ref={containerRef} className="relative h-[280vh] bg-[#050505]">
+        <div id="experience" ref={containerRef} className="relative h-[280vh] bg-[#050505]">
             <div className="sticky top-0 h-screen overflow-hidden flex flex-col px-6 py-12">
 
                 {/* Header row */}

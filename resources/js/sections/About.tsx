@@ -1,8 +1,9 @@
-import EarthGlobe from '@/components/ui/EarthGlobe';
 import GradientHeading from '@/components/ui/GradientHeading';
 import PixelTransition from '@/components/PixelTransition';
 import { motion } from 'motion/react';
-import { useRef, useEffect, useState } from 'react';
+import { lazy, Suspense, useRef, useEffect, useState } from 'react';
+
+const EarthGlobe = lazy(() => import('@/components/ui/EarthGlobe'));
 
 function useInView(threshold = 0.15) {
     const ref = useRef<HTMLDivElement>(null);
@@ -120,7 +121,9 @@ export default function About() {
                         <PixelTransition
                             firstContent={
                                 <div className="w-full h-full">
-                                    <EarthGlobe />
+                                    <Suspense fallback={null}>
+                                        <EarthGlobe />
+                                    </Suspense>
                                 </div>
                             }
                             secondContent={

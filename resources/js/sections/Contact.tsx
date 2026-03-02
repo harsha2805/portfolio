@@ -1,12 +1,16 @@
 import DecryptedText from '@/components/ui/DecryptedText';
+import FieldBrackets from '@/components/ui/FieldBrackets';
 import GradientHeading from '@/components/ui/GradientHeading';
-import PixelSnow from '@/components/ui/PixelSnow';
+import { Turnstile } from '@marsidev/react-turnstile';
 import { motion } from 'motion/react';
-import { useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
+
+const PixelSnow = lazy(() => import('@/components/ui/PixelSnow'));
 
 export default function Contact() {
     const [form, setForm] = useState({ name: '', email: '', message: '' });
     const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
+    const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -27,12 +31,13 @@ export default function Contact() {
                     'X-CSRF-TOKEN': token ?? '',
                     'X-Requested-With': 'XMLHttpRequest',
                 },
-                body: JSON.stringify(form),
+                body: JSON.stringify({ ...form, 'cf-turnstile-response': turnstileToken }),
             });
 
             if (response.ok) {
                 setStatus('sent');
                 setForm({ name: '', email: '', message: '' });
+                setTurnstileToken(null);
             } else {
                 setStatus('error');
             }
@@ -45,15 +50,17 @@ export default function Contact() {
         <section id="contact" className="relative py-32 px-6 bg-[#050505] overflow-hidden">
             {/* Pixel Snow background */}
             <div className="absolute inset-0 pointer-events-none">
-                <PixelSnow
-                    color="#a855f7"
-                    density={0.18}
-                    speed={0.8}
-                    brightness={1.2}
-                    variant="snowflake"
-                    pixelResolution={180}
-                    depthFade={10}
-                />
+                <Suspense fallback={null}>
+                    <PixelSnow
+                        color="#a855f7"
+                        density={0.18}
+                        speed={0.8}
+                        brightness={1.2}
+                        variant="snowflake"
+                        pixelResolution={180}
+                        depthFade={10}
+                    />
+                </Suspense>
             </div>
 
             <div className="relative max-w-5xl mx-auto">
@@ -143,15 +150,17 @@ export default function Contact() {
                                 <label className="block text-xs font-mono text-white/40 tracking-widest uppercase mb-2">
                                     {field.label}
                                 </label>
-                                <input
-                                    type={field.type}
-                                    name={field.name}
-                                    value={form[field.name as keyof typeof form]}
-                                    onChange={handleChange}
-                                    placeholder={field.placeholder}
-                                    required
-                                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-white/20 focus:outline-none focus:border-purple-500/50 focus:bg-white/8 transition-all duration-300"
-                                />
+                                <FieldBrackets>
+                                    <input
+                                        type={field.type}
+                                        name={field.name}
+                                        value={form[field.name as keyof typeof form]}
+                                        onChange={handleChange}
+                                        placeholder={field.placeholder}
+                                        required
+                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder:text-white/20 focus:outline-none focus:border-purple-500/50 transition-all duration-300"
+                                    />
+                                </FieldBrackets>
                             </div>
                         ))}
 
@@ -159,20 +168,29 @@ export default function Contact() {
                             <label className="block text-xs font-mono text-white/40 tracking-widest uppercase mb-2">
                                 Message
                             </label>
-                            <textarea
-                                name="message"
-                                value={form.message}
-                                onChange={handleChange}
-                                placeholder="Tell me about your project..."
-                                required
-                                rows={5}
-                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-white/20 focus:outline-none focus:border-purple-500/50 focus:bg-white/8 transition-all duration-300 resize-none"
-                            />
+                            <FieldBrackets>
+                                <textarea
+                                    name="message"
+                                    value={form.message}
+                                    onChange={handleChange}
+                                    placeholder="Tell me about your project..."
+                                    required
+                                    rows={5}
+                                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder:text-white/20 focus:outline-none focus:border-purple-500/50 transition-all duration-300 resize-none"
+                                />
+                            </FieldBrackets>
                         </div>
+
+                        <Turnstile
+                            siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
+                            onSuccess={setTurnstileToken}
+                            onExpire={() => setTurnstileToken(null)}
+                            options={{ theme: 'dark' }}
+                        />
 
                         <button
                             type="submit"
-                            disabled={status === 'sending'}
+                            disabled={status === 'sending' || !turnstileToken}
                             className="w-full py-3 bg-white text-black text-sm font-semibold rounded-full hover:bg-purple-100 disabled:opacity-50 transition-all duration-300"
                         >
                             {status === 'sending' ? 'Sending...' : status === 'sent' ? 'Message Sent ✓' : 'Send Message'}
@@ -198,7 +216,7 @@ export default function Contact() {
                 <span className="text-xs font-mono text-white/20">
                     © {new Date().getFullYear()} Harshavardhan C
                 </span>
-                <span className="text-xs font-mono text-white/20">Built with Laravel & React Bits</span>
+                <span className="text-xs font-mono text-white/20">Built with Laravel & React Bits & Claude</span>
             </motion.div>
         </section>
     );
