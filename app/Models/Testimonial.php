@@ -4,9 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class Testimonial extends Model
 {
+    protected static function booted(): void
+    {
+        static::saved(fn () => Cache::forget('testimonials.approved'));
+        static::deleted(fn () => Cache::forget('testimonials.approved'));
+    }
+
     /** @var list<string> */
     protected $fillable = ['name', 'role', 'quote', 'is_approved', 'email', 'verification_code', 'verification_expires_at', 'email_verified_at'];
 

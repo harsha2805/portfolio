@@ -114,9 +114,9 @@ export default function Contact() {
                                 </div>
                                 <div className="flex gap-4">
                                     {[
-                                        { label: 'GitHub', href: 'https://github.com' },
-                                        { label: 'LinkedIn', href: 'https://linkedin.com' },
-                                        { label: 'Twitter', href: 'https://twitter.com' },
+                                        { label: 'GitHub', href: 'https://github.com/harsha2805' },
+                                        { label: 'LinkedIn', href: 'https://www.linkedin.com/in/harshavardhan2805' },
+                                        { label: 'Stack Overflow', href: 'https://stackoverflow.com/users/20165200/harshavardhan' },
                                     ].map(social => (
                                         <a
                                             key={social.label}

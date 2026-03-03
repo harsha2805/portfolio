@@ -20,6 +20,31 @@ function getInitials(name: string): string {
         .join('');
 }
 
+function ShimmerCard({ wide = false }: { wide?: boolean }) {
+    return (
+        <div className={`relative overflow-hidden rounded-2xl bg-white/[0.03] border border-white/[0.05] p-7 ${wide ? 'sm:col-span-2' : ''}`}>
+            <motion.div
+                className="absolute inset-0 -skew-x-12 bg-gradient-to-r from-transparent via-white/[0.04] to-transparent"
+                initial={{ x: '-100%' }}
+                animate={{ x: '200%' }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: 'linear', repeatDelay: 0.6 }}
+            />
+            <div className="space-y-3 mb-8">
+                <div className="h-2.5 rounded-full bg-white/[0.06] w-full" />
+                <div className="h-2.5 rounded-full bg-white/[0.06] w-10/12" />
+                <div className="h-2.5 rounded-full bg-white/[0.06] w-4/5" />
+            </div>
+            <div className="flex items-center gap-3 pt-4 border-t border-white/[0.05]">
+                <div className="w-8 h-8 rounded-full bg-white/[0.06]" />
+                <div className="space-y-2">
+                    <div className="h-2.5 rounded-full bg-white/[0.06] w-24" />
+                    <div className="h-2 rounded-full bg-white/[0.04] w-32" />
+                </div>
+            </div>
+        </div>
+    );
+}
+
 export default function TestimonialsPage() {
     const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
     const [loading, setLoading] = useState(true);
@@ -59,10 +84,7 @@ export default function TestimonialsPage() {
             const token = csrfMeta ? csrfMeta.getAttribute('content') : '';
 
             const res = await axios.post<{ id: number }>('/testimonials/submit', form, {
-                headers: {
-                    'X-CSRF-TOKEN': token ?? '',
-                    'X-Requested-With': 'XMLHttpRequest',
-                },
+                headers: { 'X-CSRF-TOKEN': token ?? '', 'X-Requested-With': 'XMLHttpRequest' },
             });
 
             setPendingId(res.data.id);
@@ -95,10 +117,7 @@ export default function TestimonialsPage() {
             const token = csrfMeta ? csrfMeta.getAttribute('content') : '';
 
             await axios.post('/testimonials/verify', { id: pendingId, code }, {
-                headers: {
-                    'X-CSRF-TOKEN': token ?? '',
-                    'X-Requested-With': 'XMLHttpRequest',
-                },
+                headers: { 'X-CSRF-TOKEN': token ?? '', 'X-Requested-With': 'XMLHttpRequest' },
             });
 
             setStep('done');
@@ -114,8 +133,13 @@ export default function TestimonialsPage() {
 
     return (
         <div className="min-h-screen bg-[#050505] px-6 py-20">
-            <div className="max-w-5xl mx-auto">
-                {/* Back link */}
+            {/* Ambient glow */}
+            <div className="fixed inset-0 pointer-events-none overflow-hidden">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full bg-purple-700/10 blur-[120px]" />
+            </div>
+
+            <div className="relative max-w-5xl mx-auto">
+                {/* Back */}
                 <motion.div
                     initial={{ opacity: 0, x: -16 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -126,7 +150,7 @@ export default function TestimonialsPage() {
                         to="/"
                         className="inline-flex items-center gap-2 text-xs font-mono text-white/30 hover:text-white/70 transition-colors duration-300 tracking-widest uppercase"
                     >
-                        <span>←</span> Back to Portfolio
+                        ← Back to Portfolio
                     </Link>
                 </motion.div>
 
@@ -140,33 +164,37 @@ export default function TestimonialsPage() {
                     <span className="text-xs font-mono text-purple-400/60 tracking-[0.3em] uppercase">
                         What people say
                     </span>
-                    <h1 className="mt-4 text-4xl md:text-5xl font-bold text-white leading-tight">
+                    <h1 className="mt-4 text-4xl md:text-6xl font-black text-white leading-tight">
                         All Reviews
                     </h1>
-                    <p className="mt-4 text-white/40 text-sm max-w-md">
+                    <p className="mt-4 text-white/40 text-sm max-w-md leading-relaxed">
                         Words from clients, collaborators, and teammates I've had the privilege of working with.
                     </p>
                 </motion.div>
 
-                {/* Reviews grid */}
+                {/* Cards */}
                 {loading ? (
                     <div className="grid sm:grid-cols-2 gap-5">
-                        {[...Array(4)].map((_, i) => (
-                            <div key={i} className="h-48 rounded-2xl bg-white/[0.03] animate-pulse" />
-                        ))}
+                        <ShimmerCard wide />
+                        <ShimmerCard />
+                        <ShimmerCard />
                     </div>
                 ) : (
                     <div className="grid sm:grid-cols-2 gap-5">
                         {testimonials.map((t, i) => (
                             <motion.div
                                 key={t.id}
-                                initial={{ opacity: 0, y: 24 }}
+                                initial={{ opacity: 0, y: 30 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5, delay: 0.15 + i * 0.07 }}
-                                className="relative overflow-hidden rounded-2xl"
+                                transition={{ duration: 0.5, delay: 0.15 + i * 0.08 }}
+                                whileHover={{
+                                    y: -6,
+                                    boxShadow: '0 20px 50px rgba(124,58,237,0.18), 0 0 0 1px rgba(124,58,237,0.22)',
+                                }}
+                                className="relative overflow-hidden rounded-2xl group cursor-default"
                             >
-                                {/* Grainient per card */}
-                                <div className="absolute inset-0 opacity-90">
+                                {/* Grainient */}
+                                <div className="absolute inset-0">
                                     <Grainient
                                         color1="#a855f7"
                                         color2="#7c3aed"
@@ -183,21 +211,37 @@ export default function TestimonialsPage() {
                                     />
                                 </div>
 
-                                <div className="relative p-7 flex flex-col gap-5 h-full">
+                                {/* Hover glow overlay */}
+                                <div className="absolute inset-0 bg-purple-500/0 group-hover:bg-purple-500/[0.04] transition-colors duration-500 pointer-events-none" />
+
+                                {/* Decorative quote mark */}
+                                <div
+                                    aria-hidden
+                                    className="absolute -top-2 left-5 text-[100px] leading-none font-black select-none pointer-events-none text-white/[0.06]"
+                                >
+                                    &ldquo;
+                                </div>
+
+                                {/* Card number */}
+                                <span className="absolute top-5 right-6 text-[10px] font-mono text-white/20">
+                                    {String(i + 1).padStart(2, '0')}
+                                </span>
+
+                                <div className="relative flex flex-col gap-5 h-full p-7">
                                     {/* Quote */}
-                                    <p className="text-white/85 text-sm leading-relaxed font-light flex-1">
+                                    <p className="text-white/85 text-sm font-light leading-relaxed flex-1">
                                         &ldquo;{t.quote}&rdquo;
                                     </p>
 
                                     {/* Author */}
                                     <div className="flex items-center gap-3 pt-4 border-t border-white/10">
-                                        <div className="w-8 h-8 rounded-full bg-white/20 border border-white/25 flex items-center justify-center shrink-0">
-                                            <span className="text-white text-[10px] font-semibold">
+                                        <div className="w-9 h-9 rounded-full bg-white/20 border border-white/25 flex items-center justify-center shrink-0">
+                                            <span className="text-white text-[10px] font-bold">
                                                 {getInitials(t.name)}
                                             </span>
                                         </div>
                                         <div>
-                                            <div className="text-white text-sm font-semibold leading-none mb-0.5">
+                                            <div className="text-white text-sm font-semibold leading-none mb-1">
                                                 {t.name}
                                             </div>
                                             <div className="text-white/45 text-xs font-mono">
@@ -211,24 +255,27 @@ export default function TestimonialsPage() {
                     </div>
                 )}
 
-                {/* Submit a review */}
+                {/* Leave a review */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.5 }}
-                    className="mt-20 pt-16 border-t border-white/5"
+                    className="mt-24 pt-16 border-t border-white/[0.06]"
                 >
-                    <h2 className="text-2xl font-bold text-white mb-2">Leave a Review</h2>
-                    <p className="text-white/40 text-sm mb-10">
-                        Your review will be visible after approval.
-                    </p>
+                    <div className="mb-10">
+                        <h2 className="text-2xl font-bold text-white mb-2">Leave a Review</h2>
+                        <p className="text-white/40 text-sm">Your review will be visible after approval.</p>
+                    </div>
 
                     {step === 'done' && (
                         <motion.div
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
-                            className="rounded-2xl border border-purple-500/20 bg-purple-500/5 px-8 py-10 text-center"
+                            className="rounded-2xl border border-purple-500/20 bg-purple-500/5 px-8 py-12 text-center max-w-xl"
                         >
+                            <div className="w-12 h-12 rounded-full bg-purple-500/20 border border-purple-500/30 flex items-center justify-center mx-auto mb-4">
+                                <span className="text-purple-300 text-xl">✓</span>
+                            </div>
                             <p className="text-white font-semibold text-lg mb-1">Thank you!</p>
                             <p className="text-white/50 text-sm">Your review is pending approval and will appear shortly.</p>
                         </motion.div>
@@ -240,12 +287,11 @@ export default function TestimonialsPage() {
                             animate={{ opacity: 1, y: 0 }}
                             className="max-w-xl"
                         >
-                            <p className="text-white/60 text-sm mb-8">
+                            <p className="text-white/60 text-sm mb-8 leading-relaxed">
                                 We emailed a 6-digit code to{' '}
                                 <span className="text-white font-mono">{pendingEmail}</span>.
                                 Enter it below to confirm your review.
                             </p>
-
                             <form onSubmit={handleVerify} className="space-y-5">
                                 <div>
                                     <label className="block text-xs font-mono text-white/40 tracking-widest uppercase mb-2">
@@ -260,17 +306,14 @@ export default function TestimonialsPage() {
                                         required
                                         className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm font-mono tracking-widest placeholder:text-white/20 focus:outline-none focus:border-purple-500/50 transition-all duration-300"
                                     />
-                                    {verifyError && (
-                                        <p className="mt-1 text-xs text-red-400">{verifyError}</p>
-                                    )}
+                                    {verifyError && <p className="mt-1 text-xs text-red-400">{verifyError}</p>}
                                 </div>
-
                                 <button
                                     type="submit"
                                     disabled={verifyStatus === 'verifying'}
                                     className="px-8 py-3 bg-white text-black text-sm font-semibold rounded-full hover:bg-purple-100 disabled:opacity-50 transition-all duration-300"
                                 >
-                                    {verifyStatus === 'verifying' ? 'Verifying...' : 'Verify Email'}
+                                    {verifyStatus === 'verifying' ? 'Verifying…' : 'Verify Email'}
                                 </button>
                             </form>
                         </motion.div>
@@ -310,14 +353,12 @@ export default function TestimonialsPage() {
                                     name="quote"
                                     value={form.quote}
                                     onChange={handleChange}
-                                    placeholder="Share your experience working with me..."
+                                    placeholder="Share your experience working with me…"
                                     required
                                     rows={5}
                                     className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder:text-white/20 focus:outline-none focus:border-purple-500/50 transition-all duration-300 resize-none"
                                 />
-                                {errors.quote && (
-                                    <p className="mt-1 text-xs text-red-400">{errors.quote}</p>
-                                )}
+                                {errors.quote && <p className="mt-1 text-xs text-red-400">{errors.quote}</p>}
                             </div>
 
                             <button
@@ -325,13 +366,11 @@ export default function TestimonialsPage() {
                                 disabled={submitStatus === 'sending'}
                                 className="px-8 py-3 bg-white text-black text-sm font-semibold rounded-full hover:bg-purple-100 disabled:opacity-50 transition-all duration-300"
                             >
-                                {submitStatus === 'sending' ? 'Submitting...' : 'Submit Review'}
+                                {submitStatus === 'sending' ? 'Submitting…' : 'Submit Review'}
                             </button>
 
                             {submitStatus === 'error' && (
-                                <p className="text-red-400 text-xs">
-                                    Something went wrong. Please try again.
-                                </p>
+                                <p className="text-red-400 text-xs">Something went wrong. Please try again.</p>
                             )}
                         </form>
                     )}

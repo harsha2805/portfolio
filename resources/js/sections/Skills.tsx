@@ -1,6 +1,7 @@
 import GradientHeading from '@/components/ui/GradientHeading';
 import { motion } from 'motion/react';
 import { type ComponentType } from 'react';
+import type React from 'react';
 import {
     SiLaravel,
     SiPhp,
@@ -23,7 +24,7 @@ import { FaReact } from 'react-icons/fa';
 
 type Tool = {
     name: string;
-    icon: ComponentType<{ className?: string }>;
+    icon: ComponentType<{ className?: string; style?: React.CSSProperties }>;
     color: string;
 };
 

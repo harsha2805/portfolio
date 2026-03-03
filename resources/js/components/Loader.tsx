@@ -99,10 +99,10 @@ export default function Loader({ onDone }: { onDone: () => void }) {
                             backgroundClip: 'text',
                         }}
                     >
-                        HC
+                        HS
                     </div>
                     <p className="text-xs font-mono tracking-[0.45em] text-white/25 uppercase mt-3">
-                        Creative Developer
+                        Holostack
                     </p>
                 </motion.div>
 

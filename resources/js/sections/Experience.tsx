@@ -5,23 +5,23 @@ import { useRef, type MouseEvent } from 'react';
 const experiences = [
     {
         index: '01',
-        period: '2021 – 2023',
+        period: 'Dec 2023 – Aug 2024',
         status: 'Past',
-        company: 'Acme Studio',
-        role: 'Full Stack Developer',
+        company: 'Chathamkulam Technologies',
+        role: 'PHP Developer — Laravel',
         description:
-            'Built and maintained customer-facing web applications serving 50k+ users. Led the migration from a legacy PHP monolith to a modern Laravel + React stack, cutting load times by 60%.',
-        highlights: ['Laravel & React SPA', 'MySQL optimisation', 'REST API design', 'CI/CD with GitHub Actions'],
+            'Analysed and resolved software issues across production systems. Developed responsive web pages for various devices, managed data updates using queues, and integrated new features into existing platforms.',
+        highlights: ['Laravel & PHP', 'Queue management', 'Performance tuning', 'Responsive UI'],
     },
     {
         index: '02',
-        period: '2023 – Present',
+        period: 'Nov 2024 – Present',
         status: 'Current',
-        company: 'TechCorp',
-        role: 'Senior Frontend Engineer',
+        company: 'Bixware Technologies',
+        role: 'Software Engineer — Web Technologies',
         description:
-            "Architecting scalable UI systems and leading the frontend team. Introduced TypeScript across the codebase, reduced bundle size by 40%, and established the company's first design system.",
-        highlights: ['TypeScript & React', 'Design Systems', 'Performance tuning', 'Team mentorship'],
+            'Building and maintaining web applications across the full stack. Improving code efficiency by identifying bottlenecks, reducing memory usage, and enhancing the performance of existing software systems.',
+        highlights: ['Full-stack development', 'Code optimisation', 'Memory profiling', 'Feature integration'],
     },
 ];
 
@@ -187,7 +187,7 @@ function CardContent({ exp }: { exp: Exp }) {
                 <span className="text-xs font-mono text-white/20 tracking-widest uppercase border border-white/10 px-2 py-0.5 rounded-full">
                     {exp.status}
                 </span>
-                <span className="text-xs font-mono text-white/20 tracking-widest ml-auto">{exp.period}</span>
+                <span className="text-xs font-mono tracking-widest ml-auto text-purple-400/60">{exp.period}</span>
             </div>
 
             {/* Center — company + role */}

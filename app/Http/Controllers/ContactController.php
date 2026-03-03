@@ -21,7 +21,7 @@ class ContactController extends Controller
             return response()->json(['message' => 'CAPTCHA verification failed.'], 422);
         }
 
-        Mail::to(config('mail.from.address'))->send(new ContactMail($request->validated()));
+        Mail::to(config('mail.from.address'))->queue(new ContactMail($request->validated()));
 
         return response()->json(['message' => 'Message sent successfully.']);
     }

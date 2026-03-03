@@ -148,6 +148,29 @@
     100% { transform: translate(100%, 0%); opacity: 0; }
 }
 
+@keyframes progress-fill {
+    from { width: 0%; }
+    to   { width: 100%; }
+}
+
+@keyframes glitch-shake {
+    0%   { transform: translateX(0)    skewX(0deg);    filter: hue-rotate(0deg)   saturate(1); }
+    10%  { transform: translateX(-5px) skewX(-1.5deg); filter: hue-rotate(90deg)  saturate(3); }
+    20%  { transform: translateX(5px)  skewX(1.5deg);  filter: hue-rotate(180deg) saturate(4); }
+    30%  { transform: translateX(-4px) skewX(0.5deg);  filter: hue-rotate(270deg) saturate(2); }
+    40%  { transform: translateX(6px)  skewX(-1deg);   filter: hue-rotate(180deg) saturate(5); }
+    50%  { transform: translateX(-6px) skewX(1deg);    filter: hue-rotate(90deg)  saturate(3); }
+    60%  { transform: translateX(4px)  skewX(-0.5deg); filter: hue-rotate(0deg)   saturate(4); }
+    70%  { transform: translateX(-3px) skewX(1deg);    filter: hue-rotate(270deg) saturate(2); }
+    80%  { transform: translateX(3px)  skewX(-1deg);   filter: hue-rotate(180deg) saturate(3); }
+    90%  { transform: translateX(-5px) skewX(0.5deg);  filter: hue-rotate(90deg)  saturate(4); }
+    100% { transform: translateX(0)    skewX(0deg);    filter: hue-rotate(0deg)   saturate(1); }
+}
+
+.animate-glitch {
+    animation: glitch-shake 0.38s steps(1) forwards;
+}
+
 @keyframes marquee {
     from { transform: translateX(0); }
     to   { transform: translateX(-50%); }

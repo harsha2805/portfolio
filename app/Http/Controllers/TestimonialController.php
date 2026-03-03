@@ -7,13 +7,14 @@ use App\Http\Requests\TestimonialVerifyRequest;
 use App\Mail\TestimonialVerificationMail;
 use App\Models\Testimonial;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 
 class TestimonialController extends Controller
 {
     public function index(): JsonResponse
     {
-        $testimonials = Testimonial::approved()->latest()->get();
+        $testimonials = Cache::remember('testimonials.approved', now()->addMinutes(5), fn () => Testimonial::approved()->latest()->get());
 
         return response()->json($testimonials);
     }
@@ -30,7 +31,7 @@ class TestimonialController extends Controller
             'is_approved' => false,
         ]);
 
-        Mail::to($request->input('email'))->send(new TestimonialVerificationMail($code));
+        Mail::to($request->input('email'))->queue(new TestimonialVerificationMail($code));
 
         return response()->json(['id' => $testimonial->id]);
     }

@@ -15,7 +15,15 @@
       "Bash(npm uninstall:*)",
       "mcp__shadcn__view_items_in_registries",
       "WebFetch(domain:api.github.com)",
-      "mcp__shadcn__get_add_command_for_items"
+      "mcp__shadcn__get_add_command_for_items",
+      "Bash(npm i:*)",
+      "mcp__ide__getDiagnostics",
+      "mcp__laravel-boost__tinker",
+      "WebFetch(domain:berr.in)",
+      "WebFetch(domain:www.linkedin.com)",
+      "mcp__laravel-boost__get-config",
+      "mcp__laravel-boost__list-available-env-vars",
+      "mcp__laravel-boost__last-error"
     ]
   },
   "enableAllProjectMcpServers": true,
