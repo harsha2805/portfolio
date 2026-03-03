@@ -23,7 +23,9 @@
       "WebFetch(domain:www.linkedin.com)",
       "mcp__laravel-boost__get-config",
       "mcp__laravel-boost__list-available-env-vars",
-      "mcp__laravel-boost__last-error"
+      "mcp__laravel-boost__last-error",
+      "Bash(vendor/bin/pint:*)",
+      "mcp__laravel-boost__search-docs"
     ]
   },
   "enableAllProjectMcpServers": true,

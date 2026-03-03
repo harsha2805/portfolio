@@ -1,7 +1,7 @@
 import Grainient from '@/components/ui/Grainient';
 import axios from 'axios';
 import { motion } from 'motion/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 interface Testimonial {
@@ -57,7 +57,8 @@ export default function TestimonialsPage() {
     const [pendingId, setPendingId] = useState<number | null>(null);
     const [pendingEmail, setPendingEmail] = useState('');
 
-    const [code, setCode] = useState('');
+    const [digits, setDigits] = useState<string[]>(Array(6).fill(''));
+    const digitRefs = useRef<(HTMLInputElement | null)[]>([]);
     const [verifyStatus, setVerifyStatus] = useState<'idle' | 'verifying' | 'error'>('idle');
     const [verifyError, setVerifyError] = useState('');
 
@@ -116,7 +117,7 @@ export default function TestimonialsPage() {
             const csrfMeta = document.querySelector('meta[name="csrf-token"]');
             const token = csrfMeta ? csrfMeta.getAttribute('content') : '';
 
-            await axios.post('/testimonials/verify', { id: pendingId, code }, {
+            await axios.post('/testimonials/verify', { id: pendingId, code: digits.join('') }, {
                 headers: { 'X-CSRF-TOKEN': token ?? '', 'X-Requested-With': 'XMLHttpRequest' },
             });
 
@@ -292,26 +293,53 @@ export default function TestimonialsPage() {
                                 <span className="text-white font-mono">{pendingEmail}</span>.
                                 Enter it below to confirm your review.
                             </p>
-                            <form onSubmit={handleVerify} className="space-y-5">
+                            <form onSubmit={handleVerify} className="space-y-8">
                                 <div>
-                                    <label className="block text-xs font-mono text-white/40 tracking-widest uppercase mb-2">
+                                    <label className="block text-xs font-mono text-white/40 tracking-widest uppercase mb-5">
                                         Verification Code
                                     </label>
-                                    <input
-                                        type="text"
-                                        value={code}
-                                        onChange={e => setCode(e.target.value)}
-                                        placeholder="000000"
-                                        maxLength={6}
-                                        required
-                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm font-mono tracking-widest placeholder:text-white/20 focus:outline-none focus:border-purple-500/50 transition-all duration-300"
-                                    />
-                                    {verifyError && <p className="mt-1 text-xs text-red-400">{verifyError}</p>}
+                                    <div className="flex gap-3">
+                                        {digits.map((digit, i) => (
+                                            <input
+                                                key={i}
+                                                ref={el => { digitRefs.current[i] = el; }}
+                                                type="text"
+                                                inputMode="numeric"
+                                                maxLength={1}
+                                                value={digit}
+                                                onChange={e => {
+                                                    const val = e.target.value.replace(/\D/g, '').slice(-1);
+                                                    const next = [...digits];
+                                                    next[i] = val;
+                                                    setDigits(next);
+                                                    if (val && i < 5) digitRefs.current[i + 1]?.focus();
+                                                }}
+                                                onKeyDown={e => {
+                                                    if (e.key === 'Backspace' && !digits[i] && i > 0) {
+                                                        digitRefs.current[i - 1]?.focus();
+                                                    }
+                                                }}
+                                                onPaste={e => {
+                                                    e.preventDefault();
+                                                    const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+                                                    const next = [...digits];
+                                                    pasted.split('').forEach((ch, idx) => { next[idx] = ch; });
+                                                    setDigits(next);
+                                                    const focusIdx = Math.min(pasted.length, 5);
+                                                    digitRefs.current[focusIdx]?.focus();
+                                                }}
+                                                className={`w-12 h-14 text-center text-xl font-mono font-semibold rounded-xl border bg-white/5 text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500/40 focus:border-purple-500/60 caret-transparent ${
+                                                    digit ? 'border-purple-500/40 bg-purple-500/10' : 'border-white/10'
+                                                }`}
+                                            />
+                                        ))}
+                                    </div>
+                                    {verifyError && <p className="mt-3 text-xs text-red-400">{verifyError}</p>}
                                 </div>
                                 <button
                                     type="submit"
-                                    disabled={verifyStatus === 'verifying'}
-                                    className="px-8 py-3 bg-white text-black text-sm font-semibold rounded-full hover:bg-purple-100 disabled:opacity-50 transition-all duration-300"
+                                    disabled={verifyStatus === 'verifying' || digits.join('').length < 6}
+                                    className="px-8 py-3 bg-white text-black text-sm font-semibold rounded-full hover:bg-purple-100 disabled:opacity-40 transition-all duration-300"
                                 >
                                     {verifyStatus === 'verifying' ? 'Verifying…' : 'Verify Email'}
                                 </button>

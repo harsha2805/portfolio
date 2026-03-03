@@ -31,7 +31,7 @@ class TestimonialController extends Controller
             'is_approved' => false,
         ]);
 
-        Mail::to($request->input('email'))->queue(new TestimonialVerificationMail($code));
+        Mail::to($request->input('email'))->send(new TestimonialVerificationMail($code));
 
         return response()->json(['id' => $testimonial->id]);
     }
