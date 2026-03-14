@@ -2,48 +2,23 @@ import Aurora from '@/components/ui/Aurora';
 import GlareHover from '@/components/GlareHover';
 import ShinyText from '@/components/ui/ShinyText';
 import VariableProximity from '@/components/VariableProximity';
-import { motion, useMotionValue, useSpring } from 'motion/react';
-import { useEffect, useRef } from 'react';
-
-function useISTClock() {
-    const [time, setTime] = __import_useState('');
-
-    useEffect(() => {
-        const update = () =>
-            setTime(
-                new Date().toLocaleTimeString('en-IN', {
-                    timeZone: 'Asia/Kolkata',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: false,
-                }),
-            );
-        update();
-        const id = setInterval(update, 30_000);
-        return () => clearInterval(id);
-    }, []);
-
-    return time;
-}
-
-// Avoid duplicate import — pull useState from React
-import { useState as __import_useState } from 'react';
+import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
+import { useRef } from 'react';
 
 export default function Hero() {
     const heroRef = useRef<HTMLDivElement>(null);
-    const time = useISTClock();
 
     // Cursor-reactive glow
-    const cursorX = useMotionValue(0.5);
-    const cursorY = useMotionValue(0.5);
-    const glowX = useSpring(cursorX, { stiffness: 40, damping: 25 });
-    const glowY = useSpring(cursorY, { stiffness: 40, damping: 25 });
+    const rawX = useMotionValue(0.5);
+    const rawY = useMotionValue(0.5);
+    const glowLeft = useTransform(useSpring(rawX, { stiffness: 40, damping: 25 }), (v) => `${v * 100}%`);
+    const glowTop = useTransform(useSpring(rawY, { stiffness: 40, damping: 25 }), (v) => `${v * 100}%`);
 
     const handleMouseMove = (e: React.MouseEvent) => {
         const rect = heroRef.current?.getBoundingClientRect();
         if (!rect) return;
-        cursorX.set((e.clientX - rect.left) / rect.width);
-        cursorY.set((e.clientY - rect.top) / rect.height);
+        rawX.set((e.clientX - rect.left) / rect.width);
+        rawY.set((e.clientY - rect.top) / rect.height);
     };
 
     return (
@@ -64,22 +39,14 @@ export default function Hero() {
 
             {/* Cursor-reactive glow */}
             <motion.div
-                className="absolute z-[1] w-[600px] h-[600px] rounded-full pointer-events-none"
+                className="absolute z-[1] w-[500px] h-[500px] rounded-full pointer-events-none"
                 style={{
-                    left: glowX,
-                    top: glowY,
+                    left: glowLeft,
+                    top: glowTop,
                     x: '-50%',
                     y: '-50%',
-                    background: 'radial-gradient(circle, rgba(108,47,242,0.12) 0%, transparent 70%)',
-                    filter: 'blur(60px)',
-                    left: useSpring(
-                        (() => {
-                            const v = useMotionValue(0);
-                            useEffect(() => glowX.on('change', (latest) => v.set(latest * 100 + '%')), []);
-                            return v;
-                        })(),
-                        { stiffness: 40, damping: 25 },
-                    ),
+                    background: 'radial-gradient(circle, rgba(108,47,242,0.15) 0%, transparent 70%)',
+                    filter: 'blur(80px)',
                 }}
             />
 
@@ -87,9 +54,8 @@ export default function Hero() {
             <div className="absolute inset-0 z-[2] bg-gradient-to-b from-transparent via-transparent to-[#050505]" />
             <div className="absolute inset-0 z-[2] bg-gradient-to-r from-[#050505]/60 via-transparent to-[#050505]/60" />
 
-            {/* Main content — asymmetric grid */}
-            <div className="relative z-10 w-full max-w-6xl mx-auto px-6 md:px-10 grid md:grid-cols-[1fr_auto] items-center gap-10 md:gap-16">
-                {/* Left — primary content */}
+            {/* Main content */}
+            <div className="relative z-10 w-full max-w-6xl mx-auto px-6 md:px-10">
                 <div>
                     <motion.div
                         initial={{ opacity: 0, x: -20 }}
@@ -99,7 +65,8 @@ export default function Hero() {
                     >
                         <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                         <span className="text-xs font-mono text-white/40 tracking-[0.2em] uppercase">
-                            Available for work
+                            {/* Available for work */}
+                            Portfolio
                         </span>
                     </motion.div>
 
@@ -116,23 +83,6 @@ export default function Hero() {
                             radius={180}
                             falloff="gaussian"
                             className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl text-white tracking-tighter leading-[0.9]"
-                        />
-                    </motion.div>
-
-                    <motion.div
-                        initial={{ opacity: 0, y: 40 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.9, delay: 0.55, ease: [0.25, 0.46, 0.45, 0.94] }}
-                        className="mt-1"
-                    >
-                        <VariableProximity
-                            label="Chinnasamy"
-                            fromFontVariationSettings="'wght' 200, 'opsz' 8"
-                            toFontVariationSettings="'wght' 900, 'opsz' 144"
-                            containerRef={heroRef}
-                            radius={180}
-                            falloff="gaussian"
-                            className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl text-white/20 tracking-tighter leading-[0.9]"
                         />
                     </motion.div>
 
@@ -196,62 +146,6 @@ export default function Hero() {
                             View Work ↓
                         </a>
                     </motion.div>
-                </div>
-
-                {/* Right — floating editorial metadata */}
-                <div className="hidden md:flex flex-col items-end gap-12 py-8">
-                    <motion.div
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.6, delay: 1.0 }}
-                        className="text-right"
-                    >
-                        <span className="text-[10px] font-mono text-purple-400/50 tracking-[0.3em] uppercase block mb-1.5">
-                            Based in
-                        </span>
-                        <span className="text-sm font-mono text-white/50">
-                            Coimbatore, India
-                        </span>
-                        <span className="block text-[10px] font-mono text-white/20 mt-1">
-                            11°00′N &nbsp;76°57′E
-                        </span>
-                    </motion.div>
-
-                    <motion.div
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.6, delay: 1.2 }}
-                        className="text-right"
-                    >
-                        <span className="text-[10px] font-mono text-purple-400/50 tracking-[0.3em] uppercase block mb-1.5">
-                            Local Time
-                        </span>
-                        <span className="text-sm font-mono text-white/50 tabular-nums">
-                            {time} IST
-                        </span>
-                    </motion.div>
-
-                    <motion.div
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.6, delay: 1.4 }}
-                        className="text-right"
-                    >
-                        <span className="text-[10px] font-mono text-purple-400/50 tracking-[0.3em] uppercase block mb-1.5">
-                            Stack
-                        </span>
-                        <span className="text-sm font-mono text-white/50">
-                            Laravel / React / TS
-                        </span>
-                    </motion.div>
-
-                    {/* Decorative vertical line */}
-                    <motion.div
-                        initial={{ scaleY: 0 }}
-                        animate={{ scaleY: 1 }}
-                        transition={{ duration: 1.2, delay: 1.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-                        className="w-px h-24 bg-gradient-to-b from-purple-500/30 to-transparent origin-top"
-                    />
                 </div>
             </div>
 
