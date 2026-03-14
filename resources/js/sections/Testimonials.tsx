@@ -46,7 +46,7 @@ export default function Testimonials() {
     const t = testimonials[current];
 
     return (
-        <section id="testimonials" className="py-32 px-6 bg-[#050505]">
+        <section id="testimonials" className="py-16 md:py-32 px-6 bg-[#050505]">
             <div className="max-w-5xl mx-auto">
                 {/* Label */}
                 <motion.div
@@ -122,7 +122,7 @@ export default function Testimonials() {
                     </div>
 
                     {/* Right — quote card */}
-                    <div className="relative overflow-hidden rounded-2xl min-h-[280px]">
+                    <div className="relative overflow-hidden rounded-2xl min-h-[220px] md:min-h-[280px]">
                         {/* Grainient bg */}
                         <div className="absolute inset-0">
                             <Grainient
@@ -143,13 +143,13 @@ export default function Testimonials() {
                         {/* Giant decorative quote mark */}
                         <div
                             aria-hidden
-                            className="absolute -top-4 left-6 text-[160px] leading-none font-black select-none pointer-events-none"
+                            className="absolute -top-4 left-6 text-[80px] md:text-[160px] leading-none font-black select-none pointer-events-none"
                             style={{ color: 'rgba(255,255,255,0.05)' }}
                         >
                             &ldquo;
                         </div>
 
-                        <div className="relative flex flex-col justify-between h-full gap-8 px-8 py-10 md:px-12">
+                        <div className="relative flex flex-col justify-between h-full gap-6 px-5 py-6 md:gap-8 md:px-12 md:py-10">
                             {/* Word-by-word quote */}
                             <AnimatePresence mode="wait">
                                 <motion.div

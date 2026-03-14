@@ -51,11 +51,11 @@ export default function Experience() {
     const dot1Opacity = useTransform(progress, [0.4, 0.9], [0.25, 1]);
 
     return (
-        <div id="experience" ref={containerRef} className="relative h-[280vh] bg-[#050505]">
-            <div className="sticky top-0 h-screen overflow-hidden flex flex-col px-6 py-12">
+        <div id="experience" ref={containerRef} className="relative h-[180vh] md:h-[280vh] bg-[#050505]">
+            <div className="sticky top-0 h-screen overflow-hidden flex flex-col px-6 py-6 md:py-12">
 
                 {/* Header row */}
-                <div className="max-w-5xl mx-auto w-full flex items-start justify-between mb-10">
+                <div className="max-w-5xl mx-auto w-full flex items-start justify-between mb-4 md:mb-10">
                     <div>
                         <motion.span
                             initial={{ opacity: 0, x: -20 }}
@@ -85,7 +85,7 @@ export default function Experience() {
                     {/* Card 1 — base layer */}
                     <TiltCard
                         motionStyle={{ scale: card1Scale, opacity: card1Opacity }}
-                        className="absolute inset-0 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-10 md:p-14 flex flex-col justify-between origin-bottom"
+                        className="absolute inset-0 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5 md:p-14 flex flex-col justify-between origin-bottom"
                     >
                         <CardContent exp={experiences[0]} />
                     </TiltCard>
@@ -93,7 +93,7 @@ export default function Experience() {
                     {/* Card 2 — slides over card 1 */}
                     <TiltCard
                         motionStyle={{ x: card2X }}
-                        className="absolute inset-0 rounded-2xl border border-white/[0.08] bg-[#0d0d0d] p-10 md:p-14 flex flex-col justify-between"
+                        className="absolute inset-0 rounded-2xl border border-white/[0.08] bg-[#0d0d0d] p-5 md:p-14 flex flex-col justify-between"
                     >
                         <CardContent exp={experiences[1]} />
                     </TiltCard>
@@ -187,17 +187,17 @@ function CardContent({ exp }: { exp: Exp }) {
                 <span className="text-xs font-mono text-white/20 tracking-widest uppercase border border-white/10 px-2 py-0.5 rounded-full">
                     {exp.status}
                 </span>
-                <span className="text-xs font-mono tracking-widest ml-auto text-purple-400/60">{exp.period}</span>
+                <span className="text-xs font-mono tracking-widest ml-auto text-purple-400/60 hidden sm:inline">{exp.period}</span>
             </div>
 
             {/* Center — company + role */}
             <div>
-                <h3 className="text-5xl md:text-6xl font-bold text-white leading-none mb-3">{exp.company}</h3>
+                <h3 className="text-2xl sm:text-4xl md:text-6xl font-bold text-white leading-none mb-3">{exp.company}</h3>
                 <p className="text-purple-400 font-mono text-sm tracking-wider">{exp.role}</p>
             </div>
 
             {/* Bottom — description + highlights */}
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="grid md:grid-cols-2 gap-4 md:gap-8">
                 <p className="text-white/40 leading-relaxed text-sm">{exp.description}</p>
                 <ul className="space-y-2">
                     {exp.highlights.map((item) => (

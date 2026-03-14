@@ -194,6 +194,20 @@
     animation-play-state: paused;
 }
 
+@keyframes gradient-drift {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.animate-gradient-text {
+    background-size: 200% 200%;
+    animation: gradient-drift 4s ease infinite;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
 /* ── PillNav dark-theme overrides ── */
 .pill-nav-container {
     position: relative !important;

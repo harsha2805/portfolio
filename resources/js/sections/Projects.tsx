@@ -85,7 +85,7 @@ const [featured, ...rest] = projects;
 
 export default function Projects() {
     return (
-        <section id="projects" className="py-32 px-6 bg-[#050505]">
+        <section id="projects" className="py-16 md:py-32 px-6 bg-[#050505]">
             <div className="max-w-5xl mx-auto">
                 <motion.div
                     initial={{ opacity: 0, x: -20 }}
@@ -194,9 +194,12 @@ function ProjectCard({
                 {/* Faded watermark number */}
                 <span
                     aria-hidden="true"
-                    className="pointer-events-none select-none absolute bottom-3 right-4 font-black leading-none"
+                    className={`pointer-events-none select-none absolute bottom-3 right-4 font-black leading-none ${
+                        featured
+                            ? 'text-[80px] md:text-[140px]'
+                            : 'text-[60px] md:text-[100px]'
+                    }`}
                     style={{
-                        fontSize: featured ? '140px' : '100px',
                         color: project.accent,
                         opacity: 0.04,
                         lineHeight: 1,

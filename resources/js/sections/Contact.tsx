@@ -47,7 +47,7 @@ export default function Contact() {
     };
 
     return (
-        <section id="contact" className="relative py-32 px-6 bg-[#050505] overflow-hidden">
+        <section id="contact" className="relative py-16 md:py-32 px-6 bg-[#050505] overflow-hidden">
             {/* Pixel Snow background */}
             <div className="absolute inset-0 pointer-events-none">
                 <Suspense fallback={null}>
@@ -81,7 +81,7 @@ export default function Contact() {
                     className="text-4xl md:text-5xl font-bold leading-tight mb-16"
                 />
 
-                <div className="grid md:grid-cols-2 gap-16">
+                <div className="grid md:grid-cols-2 gap-8 md:gap-16">
                     {/* Left — info */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -112,7 +112,7 @@ export default function Contact() {
                                 <div className="text-xs font-mono text-white/30 tracking-widest uppercase mb-2">
                                     Socials
                                 </div>
-                                <div className="flex gap-4">
+                                <div className="flex flex-wrap gap-4">
                                     {[
                                         { label: 'GitHub', href: 'https://github.com/harsha2805' },
                                         { label: 'LinkedIn', href: 'https://www.linkedin.com/in/harshavardhan2805' },

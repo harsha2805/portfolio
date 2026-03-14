@@ -75,7 +75,7 @@ export default function About() {
     const glitchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     return (
-        <section id="about" className="py-32 px-6 bg-[#050505]">
+        <section id="about" className="py-16 md:py-32 px-6 bg-[#050505]">
             <div className="max-w-5xl mx-auto">
                 <motion.div
                     initial={{ opacity: 0, x: -20 }}
@@ -94,13 +94,12 @@ export default function About() {
                     className="text-4xl md:text-5xl font-bold leading-tight mb-12"
                 />
 
-                <div ref={ref} className="grid md:grid-cols-2 gap-16 items-start">
+                <div ref={ref} className="grid md:grid-cols-2 gap-10 md:gap-16 items-start">
                     {/* Left — paragraphs + stats */}
                     <div className="space-y-6">
                         {[
-                            "I'm Harshavardhan C — a Creative Developer who loves bridging the gap between design and engineering. I build experiences that are fast, beautiful, and purposeful.",
-                            'My work spans full-stack web development, interactive UIs, and creative experiments. I care deeply about the details: the micro-interactions, the animations, the performance.',
-                            "When I'm not coding, I'm exploring new tools, contributing to open-source, or finding inspiration in art and design.",
+                            'I craft digital experiences that are as performant as they are purposeful. From full-stack architecture to the nuances of micro-interactions, I build with a deep reverence for detail.',
+                            'Beyond the IDE, I find my rhythm in open-source collaboration and the evolving dialogue between art and technology.',
                         ].map((paragraph, i) => (
                             <motion.p
                                 key={i}
@@ -139,7 +138,7 @@ export default function About() {
                                     : '0 0 0 1px rgba(255,255,255,0.08)',
                             }}
                             transition={{ duration: 0.3 }}
-                            className="relative overflow-hidden rounded-2xl bg-[#0a0a0a] cursor-default aspect-square w-[75%]"
+                            className="relative overflow-hidden rounded-2xl bg-[#0a0a0a] cursor-default aspect-square w-full md:w-[75%]"
                         >
                             {/* Globe — shakes during glitch phase */}
                             <div
@@ -176,7 +175,7 @@ export default function About() {
                             />
 
                             {/* Info — staggered blur-fade-up after snap */}
-                            <div className="absolute inset-0 z-30 flex flex-col justify-end p-7 gap-5">
+                            <div className="absolute inset-0 z-30 flex flex-col justify-end p-4 gap-3 md:p-7 md:gap-5">
                                 <div>
                                     <GlobeInfoLine revealed={phase === 'revealed'} delay={0.04} className="text-xs font-mono text-purple-400/60 tracking-[0.25em] uppercase mb-2">
                                         BASED IN
@@ -239,7 +238,14 @@ function GlobeInfoLine({
     );
 }
 
-const NUM_STYLE = { background: 'linear-gradient(160deg,#ffffff 0%,#a78bfa 70%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' } as const;
+const NUM_STYLE = {
+    backgroundImage: 'linear-gradient(160deg, #ffffff 0%, #a78bfa 40%, #7c3aed 60%, #ffffff 100%)',
+    backgroundSize: '200% 200%',
+    backgroundClip: 'text',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    animation: 'gradient-drift 4s ease infinite',
+} as const;
 const INFINITY_PATH = 'M30,40 C30,15 65,15 100,40 C135,65 170,65 170,40 C170,15 135,15 100,40 C65,65 30,65 30,40 Z';
 
 function StatCards({ inView }: { inView: boolean }) {
@@ -247,16 +253,16 @@ function StatCards({ inView }: { inView: boolean }) {
     const projects = useCountUp(20, inView, 1800);
 
     return (
-        <div className="pt-8 flex items-stretch gap-0 divide-x divide-white/[0.07]">
+        <div className="pt-8 flex items-stretch gap-0 divide-x divide-white/[0.07] flex-wrap sm:flex-nowrap">
             {/* Years */}
             <motion.div
                 initial={{ opacity: 0, y: 16 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.5, delay: 0.45 }}
-                className="flex flex-col gap-1.5 pr-8"
+                className="flex flex-col gap-1.5 pr-4 sm:pr-8"
             >
-                <span className="text-5xl font-black tabular-nums leading-none tracking-tight" style={NUM_STYLE}>
-                    {years}<span className="text-3xl">+</span>
+                <span className="text-3xl sm:text-5xl font-black tabular-nums leading-none tracking-tight" style={NUM_STYLE}>
+                    {years}<span className="text-xl sm:text-3xl">+</span>
                 </span>
                 <span className="text-[10px] font-mono text-white/30 tracking-[0.22em] uppercase">Years Exp.</span>
             </motion.div>
@@ -266,10 +272,10 @@ function StatCards({ inView }: { inView: boolean }) {
                 initial={{ opacity: 0, y: 16 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.5, delay: 0.6 }}
-                className="flex flex-col gap-1.5 px-8"
+                className="flex flex-col gap-1.5 px-4 sm:px-8"
             >
-                <span className="text-5xl font-black tabular-nums leading-none tracking-tight" style={NUM_STYLE}>
-                    {projects}<span className="text-3xl">+</span>
+                <span className="text-3xl sm:text-5xl font-black tabular-nums leading-none tracking-tight" style={NUM_STYLE}>
+                    {projects}<span className="text-xl sm:text-3xl">+</span>
                 </span>
                 <span className="text-[10px] font-mono text-white/30 tracking-[0.22em] uppercase">Projects</span>
             </motion.div>
@@ -279,7 +285,7 @@ function StatCards({ inView }: { inView: boolean }) {
                 initial={{ opacity: 0, y: 16 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.5, delay: 0.75 }}
-                className="flex flex-col gap-1.5 pl-8"
+                className="flex flex-col gap-1.5 pl-4 sm:pl-8"
             >
                 <svg
                     viewBox="0 0 200 80"

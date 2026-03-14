@@ -78,7 +78,7 @@ function MarqueeRow({ tools, reverse = false }: { tools: Tool[]; reverse?: boole
 
 export default function Skills() {
     return (
-        <section id="skills" className="py-32 bg-[#050505] overflow-hidden">
+        <section id="skills" className="py-16 md:py-32 bg-[#050505] overflow-hidden">
             <div className="max-w-5xl mx-auto px-6">
                 <motion.div
                     initial={{ opacity: 0, x: -20 }}
@@ -110,8 +110,8 @@ export default function Skills() {
 
             {/* Edge fades */}
             <div className="relative">
-                <div className="pointer-events-none absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#050505] to-transparent z-10" />
-                <div className="pointer-events-none absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#050505] to-transparent z-10" />
+                <div className="pointer-events-none absolute inset-y-0 left-0 w-16 md:w-32 bg-gradient-to-r from-[#050505] to-transparent z-10" />
+                <div className="pointer-events-none absolute inset-y-0 right-0 w-16 md:w-32 bg-gradient-to-l from-[#050505] to-transparent z-10" />
 
                 <div className="flex flex-col gap-4">
                     <MarqueeRow tools={rowOne} />
