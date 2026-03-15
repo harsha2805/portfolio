@@ -101,7 +101,7 @@ export default function Contact() {
                             <div>
                                 <div className="text-xs font-mono text-white/30 tracking-widest uppercase mb-1">Email</div>
                                 <DecryptedText
-                                    text="harshavardhan@example.com"
+                                    text="harshapeace123@gmail.com"
                                     animateOn="view"
                                     sequential={true}
                                     speed={30}

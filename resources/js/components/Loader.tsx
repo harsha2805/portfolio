@@ -1,40 +1,94 @@
-import { motion } from 'motion/react';
+import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
 
-const LOAD_DURATION = 2400; // ms to reach 100%
-const EXIT_DELAY = 350;     // ms pause at 100% before splitting
+const MIN_DISPLAY = 1200;   // ms minimum loader visibility
+const EXIT_DELAY = 300;     // ms pause at 100% before splitting
 const SPLIT_DURATION = 900; // ms for panels to slide away
+const TIP_INTERVAL = 2200;  // ms between tip rotations
+
+const TIPS = [
+    'Mass-producing pixels...',
+    'Convincing CSS to behave...',
+    'Bribing the browser gods...',
+    'Compiling sarcasm...',
+    'Reticulating splines...',
+    'Warming up the flux capacitor...',
+    'Asking Stack Overflow for help...',
+    'Deploying carrier pigeons...',
+    'Negotiating with webpack...',
+    'Feeding the hamsters...',
+    'Polishing the pixels...',
+    'Loading awesomeness...',
+];
 
 export default function Loader({ onDone }: { onDone: () => void }) {
     const [progress, setProgress] = useState(0);
     const [exiting, setExiting] = useState(false);
+    const [tipIndex, setTipIndex] = useState(() => Math.floor(Math.random() * TIPS.length));
     const doneRef = useRef(false);
 
     useEffect(() => {
         let raf: number;
         let start: number | null = null;
+        let assetsReady = false;
+        let elapsed = 0;
+
+        // Wait for real asset readiness
+        const assetPromise = Promise.all([
+            document.fonts.ready,
+            new Promise<void>((resolve) => {
+                if (document.readyState === 'complete') return resolve();
+                window.addEventListener('load', () => resolve(), { once: true });
+            }),
+        ]).then(() => { assetsReady = true; });
+
+        const finish = () => {
+            if (doneRef.current) return;
+            doneRef.current = true;
+            setProgress(100);
+            setTimeout(() => {
+                setExiting(true);
+                setTimeout(onDone, SPLIT_DURATION);
+            }, EXIT_DELAY);
+        };
 
         const tick = (ts: number) => {
             if (!start) start = ts;
-            const t = Math.min((ts - start) / LOAD_DURATION, 1);
-            // ease-in-out cubic: fast start → slow near 100
-            const eased = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-            setProgress(Math.floor(eased * 100));
+            elapsed = ts - start;
 
-            if (t < 1) {
-                raf = requestAnimationFrame(tick);
-            } else if (!doneRef.current) {
-                doneRef.current = true;
-                setTimeout(() => {
-                    setExiting(true);
-                    setTimeout(onDone, SPLIT_DURATION);
-                }, EXIT_DELAY);
+            // Synthetic progress: ramp quickly to 90%, hold until assets ready
+            const minT = Math.min(elapsed / MIN_DISPLAY, 1);
+            const eased = minT < 0.5 ? 4 * minT * minT * minT : 1 - Math.pow(-2 * minT + 2, 3) / 2;
+            const cap = assetsReady ? 100 : 90;
+            setProgress(Math.min(Math.floor(eased * 100), cap));
+
+            // Exit when both minimum time passed AND assets are ready
+            if (elapsed >= MIN_DISPLAY && assetsReady) {
+                finish();
+                return;
             }
+
+            raf = requestAnimationFrame(tick);
         };
 
         raf = requestAnimationFrame(tick);
+
+        // Safety: if assets resolve after MIN_DISPLAY already passed
+        assetPromise.then(() => {
+            if (elapsed >= MIN_DISPLAY) finish();
+        });
+
         return () => cancelAnimationFrame(raf);
     }, [onDone]);
+
+    // Rotate tips
+    useEffect(() => {
+        if (exiting) return;
+        const id = setInterval(() => {
+            setTipIndex((i) => (i + 1) % TIPS.length);
+        }, TIP_INTERVAL);
+        return () => clearInterval(id);
+    }, [exiting]);
 
     const panelTransition = {
         duration: SPLIT_DURATION / 1000,
@@ -114,9 +168,20 @@ export default function Loader({ onDone }: { onDone: () => void }) {
                     transition={{ duration: 0.6, delay: 0.4 }}
                 >
                     <div className="flex justify-between items-center mb-2.5">
-                        <span className="text-[10px] font-mono tracking-[0.3em] text-white/20 uppercase">
-                            Loading
-                        </span>
+                        <div className="relative h-4 overflow-hidden">
+                            <AnimatePresence mode="wait">
+                                <motion.span
+                                    key={tipIndex}
+                                    className="text-[10px] font-mono tracking-[0.15em] text-white/25 block"
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -10 }}
+                                    transition={{ duration: 0.25 }}
+                                >
+                                    {TIPS[tipIndex]}
+                                </motion.span>
+                            </AnimatePresence>
+                        </div>
                         <span className="text-[10px] font-mono text-white/35 tabular-nums">
                             {String(progress).padStart(3, '0')}%
                         </span>
