@@ -221,9 +221,14 @@ export default function Testimonials() {
                                 {/* CTA */}
                                 <Link
                                     to="/testimonials"
-                                    className="self-start px-5 py-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-mono tracking-widest uppercase rounded-full transition-colors duration-300"
+                                    className="group self-start flex items-center gap-2 bg-white/[0.08] hover:bg-white/[0.14] backdrop-blur-md border border-white/[0.15] hover:border-white/[0.25] rounded-full px-5 py-2 transition-all duration-300"
                                 >
-                                    View all →
+                                    <span className="text-white/80 group-hover:text-white text-xs font-mono tracking-widest uppercase transition-colors duration-300">
+                                        View all
+                                    </span>
+                                    <span className="text-white/40 group-hover:text-white/80 group-hover:translate-x-0.5 transition-all duration-300 text-sm">
+                                        →
+                                    </span>
                                 </Link>
                             </div>
                         </div>

@@ -3,10 +3,12 @@ import GlareHover from '@/components/GlareHover';
 import ShinyText from '@/components/ui/ShinyText';
 import VariableProximity from '@/components/VariableProximity';
 import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
-import { useRef } from 'react';
+import { useCallback, useRef } from 'react';
 
 export default function Hero() {
     const heroRef = useRef<HTMLDivElement>(null);
+    const cachedRect = useRef<DOMRect | null>(null);
+    const throttleRef = useRef(false);
 
     // Cursor-reactive glow
     const rawX = useMotionValue(0.5);
@@ -14,12 +16,23 @@ export default function Hero() {
     const glowLeft = useTransform(useSpring(rawX, { stiffness: 40, damping: 25 }), (v) => `${v * 100}%`);
     const glowTop = useTransform(useSpring(rawY, { stiffness: 40, damping: 25 }), (v) => `${v * 100}%`);
 
-    const handleMouseMove = (e: React.MouseEvent) => {
-        const rect = heroRef.current?.getBoundingClientRect();
+    const handleMouseMove = useCallback((e: React.MouseEvent) => {
+        if (throttleRef.current) return;
+        throttleRef.current = true;
+        requestAnimationFrame(() => { throttleRef.current = false; });
+
+        if (!cachedRect.current) {
+            cachedRect.current = heroRef.current?.getBoundingClientRect() ?? null;
+            // Invalidate cache on scroll/resize
+            const invalidate = () => { cachedRect.current = null; };
+            window.addEventListener('scroll', invalidate, { once: true, passive: true });
+            window.addEventListener('resize', invalidate, { once: true });
+        }
+        const rect = cachedRect.current;
         if (!rect) return;
         rawX.set((e.clientX - rect.left) / rect.width);
         rawY.set((e.clientY - rect.top) / rect.height);
-    };
+    }, [rawX, rawY]);
 
     return (
         <section

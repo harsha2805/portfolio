@@ -126,33 +126,23 @@ export default function Projects() {
                         href="https://github.com/harsha2805"
                         target="_blank"
                         rel="noopener noreferrer"
-                        initial="rest"
-                        whileHover="hover"
-                        animate="rest"
-                        className="group relative flex items-center gap-4 border border-white/10 hover:border-purple-500/30 rounded-full px-8 py-3.5 overflow-hidden transition-colors duration-300"
+                        className="group relative flex items-center gap-3 bg-[#0a0a0a] border border-white/[0.06] rounded-2xl px-7 py-3.5 overflow-hidden"
+                        style={{ borderLeft: '2px solid rgba(168,85,247,0.35)' }}
+                        whileHover={{
+                            y: -3,
+                            boxShadow: '0 16px 40px rgba(108,47,242,0.12), 0 0 0 1px rgba(168,85,247,0.15)',
+                        }}
+                        transition={{ duration: 0.22, ease: 'easeOut' }}
                     >
-                        {/* Sweep fill */}
-                        <motion.span
-                            variants={{ rest: { x: '-101%' }, hover: { x: '0%' } }}
-                            transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-                            className="absolute inset-0 bg-gradient-to-r from-purple-700/30 via-violet-500/15 to-transparent pointer-events-none"
-                        />
-                        {/* Left glow blob */}
-                        <motion.span
-                            variants={{ rest: { opacity: 0, scale: 0.4 }, hover: { opacity: 1, scale: 1 } }}
-                            transition={{ duration: 0.3 }}
-                            className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-purple-500/50 blur-lg pointer-events-none"
-                        />
-                        <span className="relative text-sm font-mono text-white/40 group-hover:text-white/80 transition-colors duration-300">
-                            View all projects on GitHub
+                        {/* Subtle gradient sweep on hover */}
+                        <span className="absolute inset-0 bg-gradient-to-r from-purple-500/[0.04] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+                        <span className="relative text-sm font-mono text-white/40 group-hover:text-white/70 transition-colors duration-300 tracking-wide">
+                            Explore the Stack
                         </span>
-                        <motion.span
-                            variants={{ rest: { x: 0 }, hover: { x: 5 } }}
-                            transition={{ duration: 0.25 }}
-                            className="relative text-white/30 group-hover:text-purple-400 transition-colors duration-300 text-base leading-none"
-                        >
-                            →
-                        </motion.span>
+                        <span className="relative text-white/20 group-hover:text-purple-400 transition-colors duration-300 text-lg leading-none">
+                            ↗
+                        </span>
                     </motion.a>
                 </motion.div>
             </div>
@@ -194,11 +184,10 @@ function ProjectCard({
                 {/* Faded watermark number */}
                 <span
                     aria-hidden="true"
-                    className={`pointer-events-none select-none absolute bottom-3 right-4 font-black leading-none ${
-                        featured
-                            ? 'text-[80px] md:text-[140px]'
-                            : 'text-[60px] md:text-[100px]'
-                    }`}
+                    className={`pointer-events-none select-none absolute bottom-3 right-4 font-black leading-none ${featured
+                        ? 'text-[80px] md:text-[140px]'
+                        : 'text-[60px] md:text-[100px]'
+                        }`}
                     style={{
                         color: project.accent,
                         opacity: 0.04,
@@ -250,18 +239,16 @@ function ProjectCard({
                                 style={{ background: project.accent }}
                             />
                             <h3
-                                className={`font-bold text-white group-hover:text-white/90 transition-colors duration-300 ${
-                                    featured ? 'text-3xl md:text-4xl' : 'text-base'
-                                }`}
+                                className={`font-bold text-white group-hover:text-white/90 transition-colors duration-300 ${featured ? 'text-3xl md:text-4xl' : 'text-base'
+                                    }`}
                             >
                                 {project.title}
                             </h3>
                         </div>
 
                         <p
-                            className={`text-white/40 leading-relaxed mb-5 ${
-                                featured ? 'text-sm md:text-base mt-3' : 'text-xs mt-2'
-                            }`}
+                            className={`text-white/40 leading-relaxed mb-5 ${featured ? 'text-sm md:text-base mt-3' : 'text-xs mt-2'
+                                }`}
                         >
                             {project.description}
                         </p>

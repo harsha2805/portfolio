@@ -29,7 +29,7 @@ export default function EarthGlobe() {
             theta:  INDIA_THETA,
             dark:   1,
             diffuse:       1.1,
-            mapSamples:    20000,
+            mapSamples:    14000,
             mapBrightness: 5.5,
             baseColor:     [0.06, 0.02, 0.14],
             markerColor:   [0.76, 0.33, 1.0],
@@ -49,10 +49,24 @@ export default function EarthGlobe() {
     }, []);
 
     useEffect(() => {
-        init();
-        const ro = new ResizeObserver(init);
-        if (canvasRef.current) ro.observe(canvasRef.current);
-        return () => { globe.current?.destroy(); ro.disconnect(); };
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+
+        // Only run the globe when visible — cobe has no pause API, so destroy/recreate
+        const io = new IntersectionObserver(([entry]) => {
+            if (entry.isIntersecting) {
+                if (!globe.current) init();
+            } else {
+                globe.current?.destroy();
+                globe.current = null;
+            }
+        }, { threshold: 0 });
+        io.observe(canvas);
+
+        const ro = new ResizeObserver(() => { if (globe.current) init(); });
+        ro.observe(canvas);
+
+        return () => { globe.current?.destroy(); globe.current = null; io.disconnect(); ro.disconnect(); };
     }, [init]);
 
     const onPointerDown = useCallback((e: React.PointerEvent<HTMLCanvasElement>) => {

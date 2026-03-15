@@ -21,7 +21,39 @@ class TestimonialController extends Controller
 
     public function store(TestimonialRequest $request): JsonResponse
     {
+        $existing = Testimonial::where('email', $request->input('email'))
+            ->whereNotNull('email_verified_at')
+            ->latest()
+            ->first();
+
+        if ($existing && ! $request->boolean('confirm_update')) {
+            return response()->json([
+                'exists' => true,
+                'existing' => [
+                    'name' => $existing->name,
+                    'role' => $existing->role,
+                    'quote' => $existing->quote,
+                ],
+                'message' => 'A review already exists for this email.',
+            ], 409);
+        }
+
         $code = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+
+        if ($existing) {
+            // Update existing testimonial — requires re-verification
+            $existing->update([
+                ...$request->validated(),
+                'verification_code' => $code,
+                'verification_expires_at' => now()->addMinutes(15),
+                'email_verified_at' => null,
+                'is_approved' => false,
+            ]);
+
+            Mail::to($request->input('email'))->send(new TestimonialVerificationMail($code));
+
+            return response()->json(['id' => $existing->id, 'updated' => true]);
+        }
 
         $testimonial = Testimonial::create([
             ...$request->validated(),

@@ -53,9 +53,10 @@ export default function TestimonialsPage() {
     const [submitStatus, setSubmitStatus] = useState<'idle' | 'sending' | 'error'>('idle');
     const [errors, setErrors] = useState<Record<string, string>>({});
 
-    const [step, setStep] = useState<'form' | 'verify' | 'done'>('form');
+    const [step, setStep] = useState<'form' | 'confirm-update' | 'verify' | 'done'>('form');
     const [pendingId, setPendingId] = useState<number | null>(null);
     const [pendingEmail, setPendingEmail] = useState('');
+    const [existingReview, setExistingReview] = useState<{ name: string; role: string; quote: string } | null>(null);
 
     const [digits, setDigits] = useState<string[]>(Array(6).fill(''));
     const digitRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -75,8 +76,7 @@ export default function TestimonialsPage() {
         setErrors(prev => ({ ...prev, [e.target.name]: '' }));
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const submitReview = async (confirmUpdate = false) => {
         setSubmitStatus('sending');
         setErrors({});
 
@@ -84,17 +84,23 @@ export default function TestimonialsPage() {
             const csrfMeta = document.querySelector('meta[name="csrf-token"]');
             const token = csrfMeta ? csrfMeta.getAttribute('content') : '';
 
-            const res = await axios.post<{ id: number }>('/testimonials/submit', form, {
+            const payload = confirmUpdate ? { ...form, confirm_update: true } : form;
+            const res = await axios.post<{ id: number; updated?: boolean }>('/testimonials/submit', payload, {
                 headers: { 'X-CSRF-TOKEN': token ?? '', 'X-Requested-With': 'XMLHttpRequest' },
             });
 
             setPendingId(res.data.id);
             setPendingEmail(form.email);
             setForm({ name: '', role: '', email: '', quote: '' });
+            setExistingReview(null);
             setSubmitStatus('idle');
             setStep('verify');
         } catch (err: unknown) {
-            if (axios.isAxiosError(err) && err.response?.status === 422) {
+            if (axios.isAxiosError(err) && err.response?.status === 409 && err.response.data?.exists) {
+                setExistingReview(err.response.data.existing);
+                setSubmitStatus('idle');
+                setStep('confirm-update');
+            } else if (axios.isAxiosError(err) && err.response?.status === 422) {
                 const validationErrors = err.response.data.errors as Record<string, string[]>;
                 const flat: Record<string, string> = {};
                 for (const key in validationErrors) {
@@ -102,10 +108,18 @@ export default function TestimonialsPage() {
                 }
                 setErrors(flat);
                 setSubmitStatus('idle');
+            } else if (axios.isAxiosError(err) && err.response?.status === 429) {
+                setErrors({ _rate: 'Too many attempts. Please try again later.' });
+                setSubmitStatus('idle');
             } else {
                 setSubmitStatus('error');
             }
         }
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        await submitReview(false);
     };
 
     const handleVerify = async (e: React.FormEvent) => {
@@ -268,6 +282,48 @@ export default function TestimonialsPage() {
                         <p className="text-white/40 text-sm">Your review will be visible after approval.</p>
                     </div>
 
+                    {step === 'confirm-update' && existingReview && (
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.97 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            className="max-w-xl space-y-6"
+                        >
+                            <div className="rounded-2xl border border-amber-500/20 bg-amber-500/5 px-7 py-6">
+                                <p className="text-white font-semibold text-sm mb-1">A review already exists for this email</p>
+                                <p className="text-white/40 text-xs mb-5">Your previous review:</p>
+
+                                <div className="rounded-xl bg-white/[0.04] border border-white/[0.06] p-5 mb-5">
+                                    <p className="text-white/60 text-sm leading-relaxed italic mb-3">
+                                        &ldquo;{existingReview.quote}&rdquo;
+                                    </p>
+                                    <p className="text-white/30 text-xs font-mono">
+                                        — {existingReview.name}, {existingReview.role}
+                                    </p>
+                                </div>
+
+                                <p className="text-white/50 text-xs mb-5">
+                                    Would you like to replace it with your new review? This will require re-verification.
+                                </p>
+
+                                <div className="flex items-center gap-3">
+                                    <button
+                                        onClick={() => submitReview(true)}
+                                        disabled={submitStatus === 'sending'}
+                                        className="px-6 py-2.5 bg-white/[0.06] border border-white/10 hover:border-purple-500/30 text-white text-sm font-semibold rounded-xl hover:bg-white/[0.1] disabled:opacity-40 transition-all duration-300"
+                                    >
+                                        {submitStatus === 'sending' ? 'Updating…' : 'Yes, Update'}
+                                    </button>
+                                    <button
+                                        onClick={() => { setStep('form'); setExistingReview(null); }}
+                                        className="px-6 py-2.5 text-white/40 hover:text-white/70 text-sm font-mono transition-colors duration-300"
+                                    >
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </motion.div>
+                    )}
+
                     {step === 'done' && (
                         <motion.div
                             initial={{ opacity: 0, scale: 0.95 }}
@@ -397,6 +453,9 @@ export default function TestimonialsPage() {
                                 {submitStatus === 'sending' ? 'Submitting…' : 'Submit Review'}
                             </button>
 
+                            {errors._rate && (
+                                <p className="text-amber-400 text-xs">{errors._rate}</p>
+                            )}
                             {submitStatus === 'error' && (
                                 <p className="text-red-400 text-xs">Something went wrong. Please try again.</p>
                             )}

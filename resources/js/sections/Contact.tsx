@@ -9,7 +9,7 @@ const PixelSnow = lazy(() => import('@/components/ui/PixelSnow'));
 
 export default function Contact() {
     const [form, setForm] = useState({ name: '', email: '', message: '' });
-    const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
+    const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error' | 'rate-limited'>('idle');
     const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -38,6 +38,8 @@ export default function Contact() {
                 setStatus('sent');
                 setForm({ name: '', email: '', message: '' });
                 setTurnstileToken(null);
+            } else if (response.status === 429) {
+                setStatus('rate-limited');
             } else {
                 setStatus('error');
             }
@@ -190,12 +192,52 @@ export default function Contact() {
 
                         <button
                             type="submit"
-                            disabled={status === 'sending' || !turnstileToken}
-                            className="w-full py-3 bg-white text-black text-sm font-semibold rounded-full hover:bg-purple-100 disabled:opacity-50 transition-all duration-300"
+                            disabled={status === 'sending' || status === 'rate-limited' || !turnstileToken}
+                            className={`group relative w-full py-3.5 rounded-xl text-sm font-semibold overflow-hidden transition-all duration-500 disabled:opacity-40 disabled:cursor-not-allowed ${
+                                status === 'sent'
+                                    ? 'bg-emerald-500/15 border border-emerald-400/30 text-emerald-300'
+                                    : 'bg-white/[0.06] border border-white/10 hover:border-purple-500/30 text-white hover:bg-white/[0.1]'
+                            }`}
+                            style={{
+                                boxShadow: status === 'sent'
+                                    ? '0 0 30px rgba(16,185,129,0.15)'
+                                    : undefined,
+                            }}
                         >
-                            {status === 'sending' ? 'Sending...' : status === 'sent' ? 'Message Sent ✓' : 'Send Message'}
+                            {/* Hover shimmer */}
+                            <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.04] to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 pointer-events-none" />
+
+                            <span className="relative flex items-center justify-center gap-2 tracking-wide">
+                                {status === 'sending' ? (
+                                    <>
+                                        Sending
+                                        <svg className="animate-spin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                                            <circle cx="12" cy="12" r="10" strokeDasharray="32" strokeDashoffset="10" />
+                                        </svg>
+                                    </>
+                                ) : status === 'sent' ? (
+                                    <>
+                                        Message Sent
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                            <path d="M20 6L9 17l-5-5" />
+                                        </svg>
+                                    </>
+                                ) : (
+                                    <>
+                                        Send Message
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-50 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all duration-300">
+                                            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
+                                        </svg>
+                                    </>
+                                )}
+                            </span>
                         </button>
 
+                        {status === 'rate-limited' && (
+                            <p className="text-amber-400 text-xs text-center">
+                                Too many attempts. Please try again later.
+                            </p>
+                        )}
                         {status === 'error' && (
                             <p className="text-red-400 text-xs text-center">
                                 Something went wrong. Please try again or email directly.

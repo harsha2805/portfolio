@@ -211,16 +211,25 @@ export default function Grainient({
         setSize();
 
         let raf = 0;
+        let isVisible = true;
+        const visObserver = new IntersectionObserver(
+            ([entry]) => { isVisible = entry.isIntersecting; },
+            { threshold: 0 },
+        );
+        visObserver.observe(container);
+
         const t0 = performance.now();
         const loop = (t: number) => {
+            raf = requestAnimationFrame(loop);
+            if (!isVisible) return;
             program.uniforms.iTime.value = (t - t0) * 0.001;
             renderer.render({ scene: mesh });
-            raf = requestAnimationFrame(loop);
         };
         raf = requestAnimationFrame(loop);
 
         return () => {
             cancelAnimationFrame(raf);
+            visObserver.disconnect();
             ro.disconnect();
             try {
                 container.removeChild(canvas);

@@ -194,6 +194,11 @@
     animation-play-state: paused;
 }
 
+@keyframes shiny-text-sweep {
+    0%   { background-position: 150% center; }
+    100% { background-position: -50% center; }
+}
+
 @keyframes gradient-drift {
     0%   { background-position: 0% 50%; }
     50%  { background-position: 100% 50%; }
@@ -206,6 +211,16 @@
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+}
+
+/* ── Reduced motion: disable all custom animations ── */
+@media (prefers-reduced-motion: reduce) {
+    .animate-marquee,
+    .animate-marquee-reverse,
+    .animate-gradient-text,
+    .animate-glitch {
+        animation: none !important;
+    }
 }
 
 /* ── PillNav dark-theme overrides ── */
