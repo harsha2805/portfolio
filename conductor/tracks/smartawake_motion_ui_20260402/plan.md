@@ -9,8 +9,8 @@
 
 ## Phase 2: Core Interactivity & Motion UI
 - [x] Task: Write Tests: Create unit/integration tests for the new interactive components. (2a54543)
-- [~] Task: Implement Motion Hero: Redesign the SmartAwake hero section with motion-driven UI elements.
-- [ ] Task: Implement Feature Highlights: Add scroll-triggered reveals for SmartAwake's key features using Framer Motion.
+- [x] Task: Implement Motion Hero: Redesign the SmartAwake hero section with motion-driven UI elements. (3709755)
+- [~] Task: Implement Feature Highlights: Add scroll-triggered reveals for SmartAwake's key features using Framer Motion.
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Core Interactivity & Motion UI' (Protocol in workflow.md)
 
 ## Phase 3: Advanced Visuals & Integration
