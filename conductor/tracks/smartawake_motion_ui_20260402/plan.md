@@ -2,9 +2,9 @@
 **Description:** Enhance SmartAwake product detail page with high-end motion-driven UI and interactive elements.
 
 ## Phase 1: Research & Foundational Setup
-- [ ] Task: Analyze current `AppDetailPage.tsx` and identify specific areas for motion enhancement.
-- [ ] Task: Audit existing "SmartAwake" assets (images, descriptions) for high-end UI integration.
-- [ ] Task: Define the specific interaction patterns (e.g., scroll-triggered reveals, spring-based hover effects).
+- [x] Task: Analyze current `AppDetailPage.tsx` and identify specific areas for motion enhancement.
+- [x] Task: Audit existing "SmartAwake" assets (images, descriptions) for high-end UI integration.
+- [~] Task: Define the specific interaction patterns (e.g., scroll-triggered reveals, spring-based hover effects).
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Research & Foundational Setup' (Protocol in workflow.md)
 
 ## Phase 2: Core Interactivity & Motion UI
