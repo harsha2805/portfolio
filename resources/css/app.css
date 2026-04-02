@@ -14,6 +14,8 @@
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-headline: 'Epilogue', ui-sans-serif, system-ui, sans-serif;
+    --font-body: 'Manrope', ui-sans-serif, system-ui, sans-serif;
 }
 
 @theme inline {
@@ -136,6 +138,43 @@
   html {
     scroll-behavior: smooth;
     }
+}
+
+/* ── HoloStack theme tokens ── */
+:root {
+    --hs-page: #f4f2ef;
+    --hs-surface: #ffffff;
+    --hs-surface-hover: #f9f8f6;
+    --hs-surface-active: #f0eee9;
+    --hs-text: #1a1a1a;
+    --hs-text-secondary: #4a4a4a;
+    --hs-text-muted: #8a8a86;
+    --hs-text-ghost: rgba(17,17,17,0.18);
+    --hs-border: rgba(17,17,17,0.12);
+    --hs-border-hover: rgba(17,17,17,0.22);
+    --hs-nav-bg: rgba(244,242,239,0.88);
+    --hs-noise-opacity: 0.02;
+    --hs-glow-mult: 0.4;
+    --hs-card-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.03);
+    --hs-card-shadow-hover: 0 2px 8px rgba(0,0,0,0.06), 0 8px 32px rgba(0,0,0,0.06);
+}
+
+.dark {
+    --hs-page: #050505;
+    --hs-surface: #0a0a0a;
+    --hs-surface-hover: #111111;
+    --hs-surface-active: #181818;
+    --hs-text: #ffffff;
+    --hs-text-secondary: rgba(255,255,255,0.55);
+    --hs-text-muted: rgba(255,255,255,0.28);
+    --hs-text-ghost: rgba(255,255,255,0.10);
+    --hs-border: rgba(255,255,255,0.07);
+    --hs-border-hover: rgba(255,255,255,0.14);
+    --hs-nav-bg: rgba(5,5,5,0.88);
+    --hs-noise-opacity: 0.035;
+    --hs-glow-mult: 1;
+    --hs-card-shadow: none;
+    --hs-card-shadow-hover: none;
 }
 
 @keyframes star-movement-bottom {

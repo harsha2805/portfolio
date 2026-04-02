@@ -25,7 +25,11 @@
       "mcp__laravel-boost__list-available-env-vars",
       "mcp__laravel-boost__last-error",
       "Bash(vendor/bin/pint:*)",
-      "mcp__laravel-boost__search-docs"
+      "mcp__laravel-boost__search-docs",
+      "mcp__laravel-boost__list-routes",
+      "mcp__laravel-boost__application-info",
+      "Bash(find D:/myAwakeApp -maxdepth 3 -name *.png -o -name *.ico -o -name *.jpg -o -name *.svg)",
+      "Bash(claude mcp:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
