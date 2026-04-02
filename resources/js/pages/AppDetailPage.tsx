@@ -60,14 +60,36 @@ function FeatureItem({ feature, index }: { feature: AppFeature; index: number })
 function AppDetail({ app }: { app: AppData }) {
     const { isDark } = useTheme();
 
+    // Motion variants
+    const containerVariants = {
+        initial: { opacity: 0 },
+        animate: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.1,
+                delayChildren: 0.2
+            }
+        }
+    };
+
+    const itemVariants = {
+        initial: { opacity: 0, y: 20 },
+        animate: {
+            opacity: 1,
+            y: 0,
+            transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] }
+        }
+    };
+
     return (
         <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            variants={containerVariants}
+            initial="initial"
+            animate="animate"
         >
             {/* ── Hero band ── */}
-            <div
+            <motion.div
+                variants={itemVariants}
                 className="relative rounded-2xl overflow-hidden"
                 style={{
                     background: `linear-gradient(160deg, rgba(${app.accentRgb},0.04) 0%, var(--hs-surface) 40%)`,
@@ -85,20 +107,34 @@ function AppDetail({ app }: { app: AppData }) {
                     <div className="flex flex-col md:flex-row md:items-center gap-6 md:gap-8">
                         {/* Icon + identity */}
                         <div className="flex items-center gap-5 flex-1 min-w-0">
-                            <div
-                                className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0"
+                            <motion.div
+                                className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 cursor-default"
+                                whileHover={{ scale: 1.05, rotate: [0, -5, 5, 0] }}
+                                transition={{ type: 'spring', stiffness: 400, damping: 10 }}
                                 style={{
                                     background: `rgba(${app.accentRgb},0.08)`,
                                     border: `1px solid rgba(${app.accentRgb},0.15)`,
                                 }}
                             >
-                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={app.accentColor} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                                    <path d="M18.36 6.64A9 9 0 015.63 5.63" />
-                                    <path d="M12 2v4" />
-                                    <circle cx="12" cy="12" r="3" />
-                                    <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
-                                </svg>
-                            </div>
+                                <motion.div
+                                    animate={{
+                                        scale: [1, 1.1, 1],
+                                        opacity: [0.8, 1, 0.8]
+                                    }}
+                                    transition={{
+                                        duration: 3,
+                                        repeat: Infinity,
+                                        ease: "easeInOut"
+                                    }}
+                                >
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={app.accentColor} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M18.36 6.64A9 9 0 015.63 5.63" />
+                                        <path d="M12 2v4" />
+                                        <circle cx="12" cy="12" r="3" />
+                                        <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
+                                    </svg>
+                                </motion.div>
+                            </motion.div>
                             <div>
                                 <div className="flex flex-wrap items-center gap-3 mb-1.5">
                                     <h1 className="text-3xl md:text-4xl font-bold tracking-tight" style={{ color: 'var(--hs-text)' }}>{app.name}</h1>
@@ -115,17 +151,30 @@ function AppDetail({ app }: { app: AppData }) {
                                         {app.platform}
                                     </span>
                                 </div>
-                                <p className="text-[15px] leading-relaxed" style={{ color: 'var(--hs-text-secondary)' }}>{app.tagline}</p>
+                                <motion.p
+                                    initial={{ opacity: 0, x: -10 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: 0.5, duration: 0.5 }}
+                                    className="text-[15px] leading-relaxed"
+                                    style={{ color: 'var(--hs-text-secondary)' }}
+                                >
+                                    {app.tagline}
+                                </motion.p>
                             </div>
                         </div>
 
                         {/* Downloads */}
                         <div className="flex gap-3 shrink-0">
-                            {app.downloads.map((d) => (
-                                <a
+                            {app.downloads.map((d, i) => (
+                                <motion.a
                                     key={d.fileName}
                                     href={`/products/${d.fileName}`}
                                     download
+                                    initial={{ opacity: 0, scale: 0.9 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    transition={{ delay: 0.6 + (i * 0.1), type: 'spring' }}
+                                    whileHover={{ y: -2 }}
+                                    whileTap={{ scale: 0.98 }}
                                     className="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200"
                                     style={d.type === 'installer' ? {
                                         color: 'var(--hs-text)',
@@ -143,12 +192,12 @@ function AppDetail({ app }: { app: AppData }) {
                                     </svg>
                                     {d.label}
                                     <span className="text-[10px] font-mono opacity-40">{d.size}</span>
-                                </a>
+                                </motion.a>
                             ))}
                         </div>
                     </div>
                 </div>
-            </div>
+            </motion.div>
 
             {/* ── Body ── */}
             <div className="mt-6 grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-6">
