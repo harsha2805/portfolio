@@ -11,21 +11,29 @@ function FeatureItem({ feature, index }: { feature: AppFeature; index: number })
 
     return (
         <motion.button
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.04 * index }}
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-20px" }}
+            transition={{ duration: 0.5, delay: (index % 2) * 0.1 }}
+            whileHover={{ 
+                scale: 1.01, 
+                y: -2,
+                boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+                borderColor: 'rgba(var(--hs-accent-rgb), 0.3)'
+            }}
+            whileTap={{ scale: 0.99 }}
             onClick={() => setOpen(!open)}
-            className="text-left rounded-xl p-4 transition-all duration-200 group w-full hover:scale-[1.01]"
+            className="text-left rounded-xl p-4 transition-all duration-300 group w-full relative overflow-hidden"
             style={{
                 border: '1px solid var(--hs-border)',
                 background: 'var(--hs-surface-hover)',
             }}
         >
-            <div className="flex items-start gap-3">
+            <div className="flex items-start gap-3 relative z-10">
                 <span className="text-base mt-0.5 leading-none shrink-0 grayscale group-hover:grayscale-0 transition-all duration-300">{feature.icon}</span>
                 <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-2">
-                        <span className="text-[13px] font-medium transition-colors" style={{ color: 'var(--hs-text-secondary)' }}>{feature.title}</span>
+                        <span className="text-[13px] font-medium transition-colors group-hover:text-[var(--hs-text)]" style={{ color: 'var(--hs-text-secondary)' }}>{feature.title}</span>
                         <motion.svg
                             width="12" height="12" viewBox="0 0 24 24" fill="none"
                             stroke="var(--hs-text-ghost)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
@@ -42,7 +50,7 @@ function FeatureItem({ feature, index }: { feature: AppFeature; index: number })
                                 initial={{ height: 0, opacity: 0 }}
                                 animate={{ height: 'auto', opacity: 1 }}
                                 exit={{ height: 0, opacity: 0 }}
-                                transition={{ duration: 0.2 }}
+                                transition={{ duration: 0.3, ease: "easeOut" }}
                                 className="text-xs leading-relaxed mt-2 overflow-hidden"
                                 style={{ color: 'var(--hs-text-muted)' }}
                             >
