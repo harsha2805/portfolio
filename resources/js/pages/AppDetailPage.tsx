@@ -1,4 +1,4 @@
-import { motion, AnimatePresence, useMotionValue, useSpring } from 'motion/react';
+import { motion, AnimatePresence, useMotionValue, useSpring, useReducedMotion } from 'motion/react';
 import { useState, useEffect, useRef } from 'react';
 import { Link, useParams, Navigate } from 'react-router-dom';
 import axios from 'axios';
@@ -21,6 +21,7 @@ interface TestimonialData {
 function ProductTestimonials({ accentRgb }: { accentRgb: string }) {
     const [testimonials, setTestimonials] = useState<TestimonialData[]>([]);
     const [loading, setLoading] = useState(true);
+    const shouldReduceMotion = useReducedMotion();
 
     useEffect(() => {
         axios.get('/testimonials/data')
@@ -35,7 +36,7 @@ function ProductTestimonials({ accentRgb }: { accentRgb: string }) {
 
     return (
         <motion.div 
-            initial={{ opacity: 0, y: 30 }}
+            initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="rounded-2xl overflow-hidden relative" 
@@ -63,9 +64,9 @@ function ProductTestimonials({ accentRgb }: { accentRgb: string }) {
                     {testimonials.slice(0, 4).map((t, i) => (
                         <motion.div 
                             key={t.id}
-                            initial={{ opacity: 0, scale: 0.95 }}
+                            initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.95 }}
                             whileInView={{ opacity: 1, scale: 1 }}
-                            transition={{ delay: i * 0.1 }}
+                            transition={{ delay: shouldReduceMotion ? 0 : i * 0.1 }}
                             className="p-6 rounded-xl bg-white/[0.04] border border-white/[0.08] backdrop-blur-md"
                         >
                             <p className="text-[15px] leading-relaxed text-white/90 italic mb-4">
@@ -100,6 +101,7 @@ function ProductTestimonials({ accentRgb }: { accentRgb: string }) {
 /* ── Feature item ──────────────────────────────────────── */
 function FeatureItem({ feature, index, accentRgb }: { feature: AppFeature; index: number; accentRgb: string }) {
     const [open, setOpen] = useState(false);
+    const shouldReduceMotion = useReducedMotion();
     
     // Performance optimized mouse tracking
     const mouseX = useMotionValue(0);
@@ -116,17 +118,17 @@ function FeatureItem({ feature, index, accentRgb }: { feature: AppFeature; index
 
     return (
         <motion.div
-            initial={{ opacity: 0, y: 15 }}
+            initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-20px" }}
-            transition={{ duration: 0.4, delay: (index % 2) * 0.05 }}
+            transition={{ duration: 0.4, delay: shouldReduceMotion ? 0 : (index % 2) * 0.05 }}
             onMouseEnter={() => setOpen(true)}
             onMouseLeave={() => setOpen(false)}
             onMouseMove={handleMouseMove}
             className="relative"
         >
             <motion.div
-                whileHover={{ 
+                whileHover={shouldReduceMotion ? {} : { 
                     y: -4,
                     boxShadow: `0 12px 30px rgba(${accentRgb}, 0.15)`,
                     borderColor: `rgba(${accentRgb}, 0.4)`
@@ -187,6 +189,7 @@ function FeatureItem({ feature, index, accentRgb }: { feature: AppFeature; index
 /* ── Detail view ───────────────────────────────────────── */
 function AppDetail({ app }: { app: AppData }) {
     const { isDark } = useTheme();
+    const shouldReduceMotion = useReducedMotion();
 
     // Motion variants
     const containerVariants = {
@@ -194,14 +197,14 @@ function AppDetail({ app }: { app: AppData }) {
         animate: {
             opacity: 1,
             transition: {
-                staggerChildren: 0.1,
+                staggerChildren: shouldReduceMotion ? 0 : 0.1,
                 delayChildren: 0.2
             }
         }
     };
 
     const itemVariants = {
-        initial: { opacity: 0, y: 20 },
+        initial: shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 20 },
         animate: {
             opacity: 1,
             y: 0,
@@ -246,17 +249,17 @@ function AppDetail({ app }: { app: AppData }) {
                 {/* Stats & GitHub Link (Top Right) */}
                 <div className="absolute top-6 right-8 z-20 flex items-center gap-6">
                     {app.stats && (
-                        <div className="flex items-center gap-5">
+                        <div className="flex items-center gap-5" aria-label="Project Statistics">
                             <div className="flex flex-col items-end">
                                 <div className="flex items-center gap-1.5 text-amber-400">
-                                    <FaStar className="text-[10px]" />
+                                    <FaStar className="text-[10px]" aria-hidden="true" />
                                     <span className="text-xs font-bold font-mono">{app.stats.stars}</span>
                                 </div>
                                 <span className="text-[9px] font-mono uppercase tracking-widest text-white/30">Stars</span>
                             </div>
                             <div className="flex flex-col items-end">
                                 <div className="flex items-center gap-1.5 text-sky-400">
-                                    <FaDownload className="text-[10px]" />
+                                    <FaDownload className="text-[10px]" aria-hidden="true" />
                                     <span className="text-xs font-bold font-mono">{app.stats.downloads}+</span>
                                 </div>
                                 <span className="text-[9px] font-mono uppercase tracking-widest text-white/30">Installs</span>
@@ -268,9 +271,10 @@ function AppDetail({ app }: { app: AppData }) {
                             href={app.githubUrl}
                             target="_blank"
                             rel="noopener noreferrer"
+                            aria-label="View Source Code on GitHub"
                             className="w-9 h-9 rounded-xl flex items-center justify-center bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all text-white/70 hover:text-white"
                         >
-                            <FaGithub className="text-lg" />
+                            <FaGithub className="text-lg" aria-hidden="true" />
                         </a>
                     )}
                 </div>
@@ -344,11 +348,12 @@ function AppDetail({ app }: { app: AppData }) {
                                     key={d.fileName}
                                     href={`/products/${d.fileName}`}
                                     download
-                                    initial={{ opacity: 0, x: 20 }}
+                                    initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, x: 20 }}
                                     animate={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: 0.6 + (i * 0.1), type: 'spring' }}
-                                    whileHover={{ x: 4, background: d.type === 'installer' ? `rgba(${app.accentRgb}, 0.12)` : 'var(--hs-surface-hover)' }}
+                                    transition={{ delay: shouldReduceMotion ? 0 : 0.6 + (i * 0.1), type: 'spring' }}
+                                    whileHover={shouldReduceMotion ? {} : { x: 4, background: d.type === 'installer' ? `rgba(${app.accentRgb}, 0.12)` : 'var(--hs-surface-hover)' }}
                                     whileTap={{ scale: 0.98 }}
+                                    aria-label={`Download ${d.label} (${d.size})`}
                                     className="flex items-center justify-between gap-4 px-5 py-3 rounded-xl text-[13px] font-bold transition-all duration-300 border"
                                     style={d.type === 'installer' ? {
                                         color: 'var(--hs-text)',
@@ -361,7 +366,7 @@ function AppDetail({ app }: { app: AppData }) {
                                     }}
                                 >
                                     <div className="flex items-center gap-3">
-                                        <FaDownload className={d.type === 'installer' ? 'text-emerald-400' : 'text-white/30'} />
+                                        <FaDownload className={d.type === 'installer' ? 'text-emerald-400' : 'text-white/30'} aria-hidden="true" />
                                         <span>{d.label}</span>
                                     </div>
                                     <span className="text-[10px] font-mono opacity-40 font-medium">{d.size}</span>
