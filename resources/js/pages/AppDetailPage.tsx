@@ -5,6 +5,7 @@ import { getAppById, type AppData, type AppFeature } from '@/data/apps';
 import { useTheme } from '@/context/ThemeContext';
 import ThemeToggle from '@/components/ThemeToggle';
 import Aurora from '@/components/ui/Aurora';
+import GradientHeading from '@/components/ui/GradientHeading';
 
 /* ── Feature item ──────────────────────────────────────── */
 function FeatureItem({ feature, index, accentRgb }: { feature: AppFeature; index: number; accentRgb: string }) {
@@ -178,26 +179,26 @@ function AppDetail({ app }: { app: AppData }) {
                                 </motion.div>
                             </motion.div>
                             <div>
-                                <div className="flex flex-wrap items-center gap-3 mb-1.5">
-                                    <h1 className="text-3xl md:text-4xl font-bold tracking-tight" style={{ color: 'var(--hs-text)' }}>{app.name}</h1>
+                                <div className="flex flex-wrap items-center gap-4 mb-2.5">
+                                    <h1 className="text-4xl md:text-5xl font-black tracking-tight" style={{ color: 'var(--hs-text)' }}>{app.name}</h1>
                                     <span
-                                        className="px-2 py-0.5 text-[10px] font-mono tracking-wider uppercase rounded-md"
-                                        style={{ color: `rgba(${app.accentRgb},0.7)`, background: `rgba(${app.accentRgb},0.08)`, border: `1px solid rgba(${app.accentRgb},0.12)` }}
+                                        className="px-2.5 py-1 text-[11px] font-bold font-mono tracking-widest uppercase rounded-lg shadow-sm"
+                                        style={{ color: `rgba(${app.accentRgb},0.9)`, background: `rgba(${app.accentRgb},0.12)`, border: `1px solid rgba(${app.accentRgb},0.2)` }}
                                     >
                                         v{app.version}
                                     </span>
                                     <span
-                                        className="px-2 py-0.5 text-[10px] font-mono tracking-wider uppercase rounded-md"
+                                        className="px-2.5 py-1 text-[11px] font-bold font-mono tracking-widest uppercase rounded-lg shadow-sm"
                                         style={{ color: 'var(--hs-text-muted)', background: 'var(--hs-surface-hover)', border: '1px solid var(--hs-border)' }}
                                     >
                                         {app.platform}
                                     </span>
                                 </div>
                                 <motion.p
-                                    initial={{ opacity: 0, x: -10 }}
+                                    initial={{ opacity: 0, x: -15 }}
                                     animate={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: 0.5, duration: 0.5 }}
-                                    className="text-[15px] leading-relaxed"
+                                    transition={{ delay: 0.5, duration: 0.6, ease: "easeOut" }}
+                                    className="text-lg md:text-xl font-medium max-w-2xl leading-relaxed"
                                     style={{ color: 'var(--hs-text-secondary)' }}
                                 >
                                     {app.tagline}
@@ -242,19 +243,19 @@ function AppDetail({ app }: { app: AppData }) {
             </motion.div>
 
             {/* ── Body ── */}
-            <div className="mt-6 grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-6">
+            <div className="mt-8 grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8">
                 {/* Left */}
-                <div className="space-y-6">
+                <div className="space-y-8">
                     {/* About */}
-                    <div className="rounded-2xl p-7 md:p-8" style={{ border: '1px solid var(--hs-border)', background: 'var(--hs-surface)', boxShadow: 'var(--hs-card-shadow)' }}>
-                        <h3 className="text-xs font-mono tracking-[0.2em] uppercase mb-4" style={{ color: 'var(--hs-text-muted)' }}>About</h3>
-                        <p className="text-[15px] leading-[1.85] font-medium" style={{ color: 'var(--hs-text-secondary)' }}>{app.description}</p>
+                    <div className="rounded-2xl p-8 md:p-10" style={{ border: '1px solid var(--hs-border)', background: 'var(--hs-surface)', boxShadow: 'var(--hs-card-shadow)' }}>
+                        <GradientHeading text="About" className="text-sm font-mono tracking-[0.3em] uppercase mb-6" />
+                        <p className="text-[16px] md:text-[17px] leading-[1.9] font-medium" style={{ color: 'var(--hs-text-secondary)' }}>{app.description}</p>
                     </div>
 
                     {/* Features */}
-                    <div className="rounded-2xl p-7 md:p-8" style={{ border: '1px solid var(--hs-border)', background: 'var(--hs-surface)', boxShadow: 'var(--hs-card-shadow)' }}>
-                        <h3 className="text-xs font-mono tracking-[0.2em] uppercase mb-5" style={{ color: 'var(--hs-text-muted)' }}>Features</h3>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="rounded-2xl p-8 md:p-10" style={{ border: '1px solid var(--hs-border)', background: 'var(--hs-surface)', boxShadow: 'var(--hs-card-shadow)' }}>
+                        <GradientHeading text="Features" className="text-sm font-mono tracking-[0.3em] uppercase mb-8" />
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             {app.features.map((f, i) => (
                                 <FeatureItem key={i} feature={f} index={i} accentRgb={app.accentRgb} />
                             ))}
@@ -263,15 +264,15 @@ function AppDetail({ app }: { app: AppData }) {
                 </div>
 
                 {/* Right sidebar */}
-                <div className="space-y-6">
+                <div className="space-y-8">
                     {/* Tech */}
-                    <div className="rounded-2xl p-6" style={{ border: '1px solid var(--hs-border)', background: 'var(--hs-surface)', boxShadow: 'var(--hs-card-shadow)' }}>
-                        <h3 className="text-xs font-mono tracking-[0.2em] uppercase mb-4" style={{ color: 'var(--hs-text-muted)' }}>Built with</h3>
-                        <div className="flex flex-wrap gap-2">
+                    <div className="rounded-2xl p-7" style={{ border: '1px solid var(--hs-border)', background: 'var(--hs-surface)', boxShadow: 'var(--hs-card-shadow)' }}>
+                        <GradientHeading text="Built with" className="text-[11px] font-mono tracking-[0.3em] uppercase mb-5" />
+                        <div className="flex flex-wrap gap-2.5">
                             {app.tech.map((t) => (
                                 <span
                                     key={t}
-                                    className="px-3 py-1.5 text-[11px] font-mono tracking-wider rounded-lg"
+                                    className="px-3.5 py-2 text-[12px] font-semibold tracking-wide rounded-xl transition-colors hover:bg-[var(--hs-accent-soft)]"
                                     style={{ border: '1px solid var(--hs-border)', color: 'var(--hs-text-secondary)', background: 'var(--hs-surface-hover)' }}
                                 >
                                     {t}
@@ -281,22 +282,22 @@ function AppDetail({ app }: { app: AppData }) {
                     </div>
 
                     {/* Install */}
-                    <div className="rounded-2xl p-6" style={{ border: '1px solid var(--hs-border)', background: 'var(--hs-surface)', boxShadow: 'var(--hs-card-shadow)' }}>
-                        <h3 className="text-xs font-mono tracking-[0.2em] uppercase mb-4" style={{ color: 'var(--hs-text-muted)' }}>Install</h3>
-                        <div className="space-y-4">
+                    <div className="rounded-2xl p-7" style={{ border: '1px solid var(--hs-border)', background: 'var(--hs-surface)', boxShadow: 'var(--hs-card-shadow)' }}>
+                        <GradientHeading text="Install" className="text-[11px] font-mono tracking-[0.3em] uppercase mb-5" />
+                        <div className="space-y-5">
                             {app.downloads.find(d => d.type === 'installer') && (
                                 <div>
-                                    <div className="flex items-center gap-2 mb-2">
+                                    <div className="flex items-center gap-2.5 mb-3">
                                         <span
-                                            className="w-5 h-5 rounded-md flex items-center justify-center text-[10px] font-bold"
+                                            className="w-6 h-6 rounded-lg flex items-center justify-center text-[11px] font-bold"
                                             style={{ background: `rgba(${app.accentRgb},0.1)`, color: app.accentColor }}
                                         >
                                             1
                                         </span>
-                                        <span className="text-xs font-medium" style={{ color: 'var(--hs-text-secondary)' }}>Installer</span>
-                                        <span className="text-[9px] font-mono tracking-wider uppercase px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400/60">Recommended</span>
+                                        <span className="text-[13px] font-semibold" style={{ color: 'var(--hs-text-secondary)' }}>Installer</span>
+                                        <span className="text-[10px] font-mono tracking-wider uppercase px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400/70">Recommended</span>
                                     </div>
-                                    <div className="text-[12px] leading-[1.9] ml-7 space-y-0.5" style={{ color: 'var(--hs-text-secondary)' }}>
+                                    <div className="text-[13px] leading-[1.8] ml-8 space-y-1" style={{ color: 'var(--hs-text-muted)' }}>
                                         <p>Run the setup wizard</p>
                                         <p>Enable "Start with Windows" (optional)</p>
                                         <p>Launch from desktop or Start menu</p>
@@ -308,18 +309,18 @@ function AppDetail({ app }: { app: AppData }) {
 
                             {app.downloads.find(d => d.type === 'portable') && (
                                 <div>
-                                    <div className="flex items-center gap-2 mb-2">
+                                    <div className="flex items-center gap-2.5 mb-3">
                                         <span
-                                            className="w-5 h-5 rounded-md flex items-center justify-center text-[10px] font-bold"
+                                            className="w-6 h-6 rounded-lg flex items-center justify-center text-[11px] font-bold"
                                             style={{ background: 'var(--hs-surface-hover)', color: 'var(--hs-text-secondary)' }}
                                         >
                                             2
                                         </span>
-                                        <span className="text-xs font-medium" style={{ color: 'var(--hs-text-secondary)' }}>Portable</span>
+                                        <span className="text-[13px] font-semibold" style={{ color: 'var(--hs-text-secondary)' }}>Portable</span>
                                     </div>
-                                    <div className="text-[12px] leading-[1.9] ml-7 space-y-0.5" style={{ color: 'var(--hs-text-secondary)' }}>
+                                    <div className="text-[13px] leading-[1.8] ml-8 space-y-1" style={{ color: 'var(--hs-text-muted)' }}>
                                         <p>Place EXE anywhere, double-click to run</p>
-                                        <p>Settings in <code className="px-1 rounded text-[11px]" style={{ color: 'var(--hs-text-secondary)', background: 'var(--hs-surface-hover)' }}>%LocalAppData%\SmartAwake\</code></p>
+                                        <p>Settings in <code className="px-1.5 py-0.5 rounded text-[11px] font-mono" style={{ color: 'var(--hs-text-secondary)', background: 'var(--hs-surface-hover)' }}>%LocalAppData%\SmartAwake\</code></p>
                                     </div>
                                 </div>
                             )}
