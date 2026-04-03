@@ -1,11 +1,100 @@
 import { motion, AnimatePresence } from 'motion/react';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useParams, Navigate } from 'react-router-dom';
+import axios from 'axios';
 import { getAppById, type AppData, type AppFeature } from '@/data/apps';
 import { useTheme } from '@/context/ThemeContext';
 import ThemeToggle from '@/components/ThemeToggle';
 import Aurora from '@/components/ui/Aurora';
 import GradientHeading from '@/components/ui/GradientHeading';
+import Grainient from '@/components/ui/Grainient';
+
+/* ── Testimonials Component ────────────────────────────── */
+interface TestimonialData {
+    id: number;
+    name: string;
+    role: string;
+    quote: string;
+}
+
+function ProductTestimonials({ accentRgb }: { accentRgb: string }) {
+    const [testimonials, setTestimonials] = useState<TestimonialData[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        axios.get('/testimonials/data')
+            .then(res => {
+                setTestimonials(res.data);
+                setLoading(false);
+            })
+            .catch(() => setLoading(false));
+    }, []);
+
+    if (loading || testimonials.length === 0) return null;
+
+    return (
+        <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="rounded-2xl overflow-hidden relative" 
+            style={{ 
+                border: '1px solid var(--hs-border)', 
+                background: 'var(--hs-surface)', 
+                boxShadow: 'var(--hs-card-shadow)',
+                minHeight: '300px'
+            }}
+        >
+            {/* Grainient Background */}
+            <div className="absolute inset-0 opacity-40">
+                <Grainient
+                    color1={`rgb(${accentRgb})`}
+                    color2="#000000"
+                    color3={`rgba(${accentRgb}, 0.5)`}
+                    grainAmount={0.05}
+                />
+            </div>
+
+            <div className="p-8 md:p-10 relative z-10">
+                <GradientHeading text="What Users Say" className="text-sm font-mono tracking-[0.3em] uppercase mb-8" />
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {testimonials.slice(0, 4).map((t, i) => (
+                        <motion.div 
+                            key={t.id}
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: i * 0.1 }}
+                            className="p-6 rounded-xl bg-white/[0.03] border border-white/[0.06] backdrop-blur-sm"
+                        >
+                            <p className="text-[15px] leading-relaxed text-white/90 italic mb-4">
+                                &ldquo;{t.quote}&rdquo;
+                            </p>
+                            <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-[10px] font-bold text-white uppercase">
+                                    {t.name.charAt(0)}
+                                </div>
+                                <div>
+                                    <div className="text-[13px] font-semibold text-white">{t.name}</div>
+                                    <div className="text-[11px] text-white/50 font-mono">{t.role}</div>
+                                </div>
+                            </div>
+                        </motion.div>
+                    ))}
+                </div>
+
+                <div className="mt-8 flex justify-center">
+                    <Link 
+                        to="/testimonials" 
+                        className="text-xs font-mono tracking-widest uppercase py-2 px-6 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 transition-colors text-white/70"
+                    >
+                        View All Reviews
+                    </Link>
+                </div>
+            </div>
+        </motion.div>
+    );
+}
 
 /* ── Feature item ──────────────────────────────────────── */
 function FeatureItem({ feature, index, accentRgb }: { feature: AppFeature; index: number; accentRgb: string }) {
@@ -327,6 +416,11 @@ function AppDetail({ app }: { app: AppData }) {
                         </div>
                     </div>
                 </div>
+            </div>
+
+            {/* Testimonials */}
+            <div className="mt-8">
+                <ProductTestimonials accentRgb={app.accentRgb} />
             </div>
         </motion.div>
     );

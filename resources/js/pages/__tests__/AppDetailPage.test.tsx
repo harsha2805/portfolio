@@ -59,7 +59,7 @@ describe('AppDetailPage', () => {
         });
     });
 
-    it('renders the testimonials section', () => {
+    it('renders the testimonials section', async () => {
         render(
             <ThemeProvider>
                 <MemoryRouter initialEntries={['/apps/smartawake']}>
@@ -70,7 +70,8 @@ describe('AppDetailPage', () => {
             </ThemeProvider>
         );
 
-        // Check if testimonials heading is present
-        expect(screen.getByText(/What Users Say/i)).toBeInTheDocument();
+        // Check if testimonials heading is present (async)
+        expect(await screen.findByText(/What Users Say/i)).toBeInTheDocument();
+        expect(await screen.findByText(/Test User/i)).toBeInTheDocument();
     });
 });

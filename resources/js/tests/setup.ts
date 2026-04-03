@@ -69,6 +69,18 @@ Object.defineProperty(window, 'IntersectionObserver', {
     value: IntersectionObserverMock,
 });
 
+// Mock ResizeObserver
+class ResizeObserverMock {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+}
+
+Object.defineProperty(window, 'ResizeObserver', {
+    writable: true,
+    value: ResizeObserverMock,
+});
+
 // Mock ogl
 vi.mock('ogl', () => {
     return {
@@ -93,6 +105,8 @@ vi.mock('ogl', () => {
                     uColorStops: { value: [] },
                     uResolution: { value: [0, 0] },
                     uBlend: { value: 0 },
+                    iResolution: { value: new Float32Array([0, 0]) },
+                    iTime: { value: 0 },
                 },
             };
         }),
@@ -107,6 +121,19 @@ vi.mock('ogl', () => {
                 attributes: { uv: {} },
             };
         }),
+    };
+});
+
+// Mock axios
+vi.mock('axios', () => {
+    return {
+        default: {
+            get: vi.fn().mockResolvedValue({
+                data: [
+                    { id: 1, name: 'Test User', role: 'Tester', quote: 'Great app!' }
+                ]
+            }),
+        },
     };
 });
 
