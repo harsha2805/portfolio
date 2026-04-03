@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useState, useEffect, useRef } from 'react';
 import { Link, useParams, Navigate } from 'react-router-dom';
 import axios from 'axios';
+import { FaGithub, FaStar, FaDownload } from 'react-icons/fa';
 import { getAppById, type AppData, type AppFeature } from '@/data/apps';
 import { useTheme } from '@/context/ThemeContext';
 import ThemeToggle from '@/components/ThemeToggle';
@@ -42,15 +43,15 @@ function ProductTestimonials({ accentRgb }: { accentRgb: string }) {
                 border: '1px solid var(--hs-border)', 
                 background: 'var(--hs-surface)', 
                 boxShadow: 'var(--hs-card-shadow)',
-                minHeight: '300px'
+                minHeight: '280px'
             }}
         >
-            {/* Grainient Background */}
-            <div className="absolute inset-0 opacity-40">
+            {/* Purple Grainient Background - Reusing the branding color */}
+            <div className="absolute inset-0 opacity-60">
                 <Grainient
-                    color1={`rgb(${accentRgb})`}
-                    color2="#000000"
-                    color3={`rgba(${accentRgb}, 0.5)`}
+                    color1="#a855f7"
+                    color2="#7c3aed"
+                    color3="#3b0764"
                     grainAmount={0.05}
                 />
             </div>
@@ -65,7 +66,7 @@ function ProductTestimonials({ accentRgb }: { accentRgb: string }) {
                             initial={{ opacity: 0, scale: 0.95 }}
                             whileInView={{ opacity: 1, scale: 1 }}
                             transition={{ delay: i * 0.1 }}
-                            className="p-6 rounded-xl bg-white/[0.03] border border-white/[0.06] backdrop-blur-sm"
+                            className="p-6 rounded-xl bg-white/[0.04] border border-white/[0.08] backdrop-blur-md"
                         >
                             <p className="text-[15px] leading-relaxed text-white/90 italic mb-4">
                                 &ldquo;{t.quote}&rdquo;
@@ -210,7 +211,7 @@ function AppDetail({ app }: { app: AppData }) {
             {/* ── Hero band ── */}
             <motion.div
                 variants={itemVariants}
-                className="relative rounded-2xl overflow-hidden min-h-[320px] flex items-center"
+                className="relative rounded-2xl overflow-hidden"
                 style={{
                     background: `linear-gradient(160deg, rgba(${app.accentRgb},0.04) 0%, var(--hs-surface) 40%)`,
                     border: '1px solid var(--hs-border)',
@@ -218,14 +219,14 @@ function AppDetail({ app }: { app: AppData }) {
                 }}
             >
                 {/* Aurora Background */}
-                <div className="absolute inset-0 pointer-events-none opacity-30">
+                <div className="absolute inset-0 pointer-events-none opacity-20">
                     <Aurora 
                         colorStops={[
                             `rgb(${app.accentRgb})`, 
                             '#7cff67', 
                             `rgb(${app.accentRgb})`
                         ]} 
-                        amplitude={0.8}
+                        amplitude={0.6}
                     />
                 </div>
 
@@ -235,12 +236,44 @@ function AppDetail({ app }: { app: AppData }) {
                     style={{ background: `linear-gradient(90deg, transparent, rgba(${app.accentRgb},0.3), transparent)` }}
                 />
 
+                {/* Stats & GitHub Link (Top Right) */}
+                <div className="absolute top-6 right-8 z-20 flex items-center gap-6">
+                    {app.stats && (
+                        <div className="flex items-center gap-5">
+                            <div className="flex flex-col items-end">
+                                <div className="flex items-center gap-1.5 text-amber-400">
+                                    <FaStar className="text-[10px]" />
+                                    <span className="text-xs font-bold font-mono">{app.stats.stars}</span>
+                                </div>
+                                <span className="text-[9px] font-mono uppercase tracking-widest text-white/30">Stars</span>
+                            </div>
+                            <div className="flex flex-col items-end">
+                                <div className="flex items-center gap-1.5 text-sky-400">
+                                    <FaDownload className="text-[10px]" />
+                                    <span className="text-xs font-bold font-mono">{app.stats.downloads}+</span>
+                                </div>
+                                <span className="text-[9px] font-mono uppercase tracking-widest text-white/30">Installs</span>
+                            </div>
+                        </div>
+                    )}
+                    {app.githubUrl && (
+                        <a 
+                            href={app.githubUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-9 h-9 rounded-xl flex items-center justify-center bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all text-white/70 hover:text-white"
+                        >
+                            <FaGithub className="text-lg" />
+                        </a>
+                    )}
+                </div>
+
                 <div className="p-8 md:p-10 relative z-10 w-full">
-                    <div className="flex flex-col md:flex-row md:items-center gap-6 md:gap-8">
+                    <div className="flex flex-col md:flex-row md:items-center gap-6 md:gap-10">
                         {/* Icon + identity */}
-                        <div className="flex items-center gap-5 flex-1 min-w-0">
+                        <div className="flex items-center gap-6 flex-1 min-w-0">
                             <motion.div
-                                className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 cursor-default"
+                                className="w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 cursor-default"
                                 whileHover={{ scale: 1.05, rotate: [0, -5, 5, 0] }}
                                 transition={{ type: 'spring', stiffness: 400, damping: 10 }}
                                 style={{
@@ -259,7 +292,7 @@ function AppDetail({ app }: { app: AppData }) {
                                         ease: "easeInOut"
                                     }}
                                 >
-                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={app.accentColor} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke={app.accentColor} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                                         <path d="M18.36 6.64A9 9 0 015.63 5.63" />
                                         <path d="M12 2v4" />
                                         <circle cx="12" cy="12" r="3" />
@@ -268,26 +301,28 @@ function AppDetail({ app }: { app: AppData }) {
                                 </motion.div>
                             </motion.div>
                             <div>
-                                <div className="flex flex-wrap items-center gap-4 mb-2.5">
-                                    <h1 className="text-4xl md:text-5xl font-black tracking-tight" style={{ color: 'var(--hs-text)' }}>{app.name}</h1>
-                                    <span
-                                        className="px-2.5 py-1 text-[11px] font-bold font-mono tracking-widest uppercase rounded-lg shadow-sm"
-                                        style={{ color: `rgba(${app.accentRgb},0.9)`, background: `rgba(${app.accentRgb},0.12)`, border: `1px solid rgba(${app.accentRgb},0.2)` }}
-                                    >
-                                        v{app.version}
-                                    </span>
-                                    <span
-                                        className="px-2.5 py-1 text-[11px] font-bold font-mono tracking-widest uppercase rounded-lg shadow-sm"
-                                        style={{ color: 'var(--hs-text-muted)', background: 'var(--hs-surface-hover)', border: '1px solid var(--hs-border)' }}
-                                    >
-                                        {app.platform}
-                                    </span>
+                                <div className="flex flex-wrap items-center gap-4 mb-2">
+                                    <h1 className="text-3xl md:text-4xl font-black tracking-tight" style={{ color: 'var(--hs-text)' }}>{app.name}</h1>
+                                    <div className="flex items-center gap-2">
+                                        <span
+                                            className="px-2 py-0.5 text-[10px] font-bold font-mono tracking-widest uppercase rounded-md shadow-sm"
+                                            style={{ color: `rgba(${app.accentRgb},0.9)`, background: `rgba(${app.accentRgb},0.12)`, border: `1px solid rgba(${app.accentRgb},0.2)` }}
+                                        >
+                                            v{app.version}
+                                        </span>
+                                        <span
+                                            className="px-2 py-0.5 text-[10px] font-bold font-mono tracking-widest uppercase rounded-md shadow-sm"
+                                            style={{ color: 'var(--hs-text-muted)', background: 'var(--hs-surface-hover)', border: '1px solid var(--hs-border)' }}
+                                        >
+                                            {app.platform}
+                                        </span>
+                                    </div>
                                 </div>
                                 <motion.p
                                     initial={{ opacity: 0, x: -15 }}
                                     animate={{ opacity: 1, x: 0 }}
                                     transition={{ delay: 0.5, duration: 0.6, ease: "easeOut" }}
-                                    className="text-lg md:text-xl font-medium max-w-2xl leading-relaxed"
+                                    className="text-base md:text-lg font-medium max-w-2xl leading-relaxed"
                                     style={{ color: 'var(--hs-text-secondary)' }}
                                 >
                                     {app.tagline}
@@ -295,35 +330,34 @@ function AppDetail({ app }: { app: AppData }) {
                             </div>
                         </div>
 
-                        {/* Downloads */}
-                        <div className="flex gap-3 shrink-0">
+                        {/* Downloads (Vertical) */}
+                        <div className="flex flex-col gap-2.5 shrink-0 min-w-[180px]">
                             {app.downloads.map((d, i) => (
                                 <motion.a
                                     key={d.fileName}
                                     href={`/products/${d.fileName}`}
                                     download
-                                    initial={{ opacity: 0, scale: 0.9 }}
-                                    animate={{ opacity: 1, scale: 1 }}
+                                    initial={{ opacity: 0, x: 20 }}
+                                    animate={{ opacity: 1, x: 0 }}
                                     transition={{ delay: 0.6 + (i * 0.1), type: 'spring' }}
-                                    whileHover={{ y: -2 }}
+                                    whileHover={{ x: 4, background: d.type === 'installer' ? `rgba(${app.accentRgb}, 0.12)` : 'var(--hs-surface-hover)' }}
                                     whileTap={{ scale: 0.98 }}
-                                    className="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200"
+                                    className="flex items-center justify-between gap-4 px-5 py-3 rounded-xl text-[13px] font-bold transition-all duration-300 border"
                                     style={d.type === 'installer' ? {
                                         color: 'var(--hs-text)',
                                         borderColor: `rgba(${app.accentRgb},0.3)`,
                                         background: `rgba(${app.accentRgb},0.08)`,
-                                        border: `1px solid rgba(${app.accentRgb},0.3)`,
                                     } : {
                                         color: 'var(--hs-text-secondary)',
-                                        border: '1px solid var(--hs-border)',
+                                        borderColor: 'var(--hs-border)',
                                         background: 'var(--hs-surface)',
                                     }}
                                 >
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" />
-                                    </svg>
-                                    {d.label}
-                                    <span className="text-[10px] font-mono opacity-40">{d.size}</span>
+                                    <div className="flex items-center gap-3">
+                                        <FaDownload className={d.type === 'installer' ? 'text-emerald-400' : 'text-white/30'} />
+                                        <span>{d.label}</span>
+                                    </div>
+                                    <span className="text-[10px] font-mono opacity-40 font-medium">{d.size}</span>
                                 </motion.a>
                             ))}
                         </div>

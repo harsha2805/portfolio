@@ -23,6 +23,11 @@ export interface AppData {
     downloads: AppDownload[];
     accentColor: string;
     accentRgb: string;
+    githubUrl?: string;
+    stats?: {
+        stars: number;
+        downloads: number;
+    };
 }
 
 export const apps: AppData[] = [
@@ -51,6 +56,11 @@ export const apps: AppData[] = [
         ],
         accentColor: '#22c55e',
         accentRgb: '34,197,94',
+        githubUrl: 'https://github.com/harsha-bixware/SmartAwake',
+        stats: {
+            stars: 124,
+            downloads: 1420,
+        },
     },
 ];
 
