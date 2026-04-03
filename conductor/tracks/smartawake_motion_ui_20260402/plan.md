@@ -19,8 +19,8 @@
 - [x] Task: Integrate Testimonials: Wire the existing verified testimonial system specifically into the SmartAwake detail view. (6df78a9)
 - [x] Task: Conductor - User Manual Verification 'Phase 3: Advanced Visuals & Integration' (Protocol in workflow.md)
 
-## Phase 4: Optimization & Final Polish
+## Phase 4: Optimization & Final Polish [checkpoint: 9f0b01a]
 - [x] Task: Performance Optimization: Implement throttling, RAF management, and intersection-observer-driven animation pausing. (445dda7)
 - [x] Task: Accessibility & Responsive Audit: Ensure full WCAG compliance and perfect mobile responsiveness. (4412512)
 - [x] Task: Final Verification & Cleanup: Remove any legacy code and perform a final end-to-end check. (e9a236f)
-- [~] Task: Conductor - User Manual Verification 'Phase 4: Optimization & Final Polish' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 4: Optimization & Final Polish' (Protocol in workflow.md)
