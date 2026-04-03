@@ -1,4 +1,4 @@
-~~# Project Workflow
+# Project Workflow
 
 ## Guiding Principles
 
