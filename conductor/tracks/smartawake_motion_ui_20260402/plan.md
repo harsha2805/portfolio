@@ -20,7 +20,7 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 3: Advanced Visuals & Integration' (Protocol in workflow.md)
 
 ## Phase 4: Optimization & Final Polish
-- [ ] Task: Performance Optimization: Implement throttling, RAF management, and intersection-observer-driven animation pausing.
-- [ ] Task: Accessibility & Responsive Audit: Ensure full WCAG compliance and perfect mobile responsiveness.
+- [x] Task: Performance Optimization: Implement throttling, RAF management, and intersection-observer-driven animation pausing. (445dda7)
+- [~] Task: Accessibility & Responsive Audit: Ensure full WCAG compliance and perfect mobile responsiveness.
 - [ ] Task: Final Verification & Cleanup: Remove any legacy code and perform a final end-to-end check.
 - [ ] Task: Conductor - User Manual Verification 'Phase 4: Optimization & Final Polish' (Protocol in workflow.md)
