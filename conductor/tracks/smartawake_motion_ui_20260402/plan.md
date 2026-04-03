@@ -15,8 +15,8 @@
 
 ## Phase 3: Advanced Visuals & Integration
 - [x] Task: Integrate Custom Background: Add a stylized canvas or 3D element (e.g., a variant of Grainient or Aurora) specific to the SmartAwake theme. (6f02683)
-- [~] Task: Refine Typography & Layout: Adjust typography and spacing to align with the "Sleek Minimalism" visual style.
-- [ ] Task: Integrate Testimonials: Wire the existing verified testimonial system specifically into the SmartAwake detail view.
+- [x] Task: Refine Typography & Layout: Adjust typography and spacing to align with the "Sleek Minimalism" visual style. (3aa9e72)
+- [~] Task: Integrate Testimonials: Wire the existing verified testimonial system specifically into the SmartAwake detail view.
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: Advanced Visuals & Integration' (Protocol in workflow.md)
 
 ## Phase 4: Optimization & Final Polish
