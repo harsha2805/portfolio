@@ -190,6 +190,26 @@ function FeatureItem({ feature, index, accentRgb }: { feature: AppFeature; index
 function AppDetail({ app }: { app: AppData }) {
     const { isDark } = useTheme();
     const shouldReduceMotion = useReducedMotion();
+    const [stats, setStats] = useState(app.stats);
+
+    // Fetch real GitHub stats if available
+    useEffect(() => {
+        if (app.githubUrl) {
+            const repo = app.githubUrl.split('github.com/')[1];
+            if (repo) {
+                axios.get(`https://api.github.com/repos/${repo}`)
+                    .then(res => {
+                        setStats({
+                            stars: res.data.stargazers_count,
+                            downloads: stats?.downloads || 0
+                        });
+                    })
+                    .catch(() => {
+                        // Fallback to static data
+                    });
+            }
+        }
+    }, [app.githubUrl]);
 
     // Motion variants
     const containerVariants = {
@@ -246,43 +266,10 @@ function AppDetail({ app }: { app: AppData }) {
                     style={{ background: `linear-gradient(90deg, transparent, rgba(${app.accentRgb},0.3), transparent)` }}
                 />
 
-                {/* Stats & GitHub Link (Top Right) */}
-                <div className="absolute top-6 right-8 z-20 flex items-center gap-6">
-                    {app.stats && (
-                        <div className="flex items-center gap-5" aria-label="Project Statistics">
-                            <div className="flex flex-col items-end">
-                                <div className="flex items-center gap-1.5 text-amber-400">
-                                    <FaStar className="text-[10px]" aria-hidden="true" />
-                                    <span className="text-xs font-bold font-mono">{app.stats.stars}</span>
-                                </div>
-                                <span className="text-[9px] font-mono uppercase tracking-widest text-white/30">Stars</span>
-                            </div>
-                            <div className="flex flex-col items-end">
-                                <div className="flex items-center gap-1.5 text-sky-400">
-                                    <FaDownload className="text-[10px]" aria-hidden="true" />
-                                    <span className="text-xs font-bold font-mono">{app.stats.downloads}+</span>
-                                </div>
-                                <span className="text-[9px] font-mono uppercase tracking-widest text-white/30">Installs</span>
-                            </div>
-                        </div>
-                    )}
-                    {app.githubUrl && (
-                        <a 
-                            href={app.githubUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label="View Source Code on GitHub"
-                            className="w-9 h-9 rounded-xl flex items-center justify-center bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all text-white/70 hover:text-white"
-                        >
-                            <FaGithub className="text-lg" aria-hidden="true" />
-                        </a>
-                    )}
-                </div>
-
                 <div className="p-8 md:p-10 relative z-10 w-full">
-                    <div className="flex flex-col md:flex-row md:items-center gap-6 md:gap-10">
+                    <div className="flex flex-col md:flex-row md:items-start justify-between gap-8 md:gap-10">
                         {/* Icon + identity */}
-                        <div className="flex items-center gap-6 flex-1 min-w-0">
+                        <div className="flex items-start gap-6 flex-1 min-w-0">
                             <motion.div
                                 className="w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 cursor-default"
                                 whileHover={{ scale: 1.05, rotate: [0, -5, 5, 0] }}
@@ -333,16 +320,50 @@ function AppDetail({ app }: { app: AppData }) {
                                     initial={{ opacity: 0, x: -15 }}
                                     animate={{ opacity: 1, x: 0 }}
                                     transition={{ delay: 0.5, duration: 0.6, ease: "easeOut" }}
-                                    className="text-base md:text-lg font-medium max-w-2xl leading-relaxed"
+                                    className="text-base md:text-lg font-medium max-w-2xl leading-relaxed mb-5"
                                     style={{ color: 'var(--hs-text-secondary)' }}
                                 >
                                     {app.tagline}
                                 </motion.p>
+
+                                {/* Stats & GitHub Link (Inside identity block to avoid overlap) */}
+                                <div className="flex items-center gap-6">
+                                    {stats && (
+                                        <div className="flex items-center gap-5" aria-label="Project Statistics">
+                                            <div className="flex flex-col items-start">
+                                                <div className="flex items-center gap-1.5 text-amber-400">
+                                                    <FaStar className="text-[10px]" aria-hidden="true" />
+                                                    <span className="text-xs font-bold font-mono">{stats.stars}</span>
+                                                </div>
+                                                <span className="text-[9px] font-mono uppercase tracking-widest text-white/30">Stars</span>
+                                            </div>
+                                            <div className="flex flex-col items-start">
+                                                <div className="flex items-center gap-1.5 text-sky-400">
+                                                    <FaDownload className="text-[10px]" aria-hidden="true" />
+                                                    <span className="text-xs font-bold font-mono">{stats.downloads}+</span>
+                                                </div>
+                                                <span className="text-[9px] font-mono uppercase tracking-widest text-white/30">Installs</span>
+                                            </div>
+                                        </div>
+                                    )}
+                                    {app.githubUrl && (
+                                        <a 
+                                            href={app.githubUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            aria-label="View Source Code on GitHub"
+                                            className="h-9 px-4 rounded-xl flex items-center justify-center gap-2 bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all text-white/70 hover:text-white"
+                                        >
+                                            <FaGithub className="text-base" aria-hidden="true" />
+                                            <span className="text-[11px] font-bold font-mono tracking-wider uppercase">Repository</span>
+                                        </a>
+                                    )}
+                                </div>
                             </div>
                         </div>
 
                         {/* Downloads (Vertical) */}
-                        <div className="flex flex-col gap-2.5 shrink-0 min-w-[180px]">
+                        <div className="flex flex-col gap-2.5 shrink-0 min-w-[200px]">
                             {app.downloads.map((d, i) => (
                                 <motion.a
                                     key={d.fileName}
