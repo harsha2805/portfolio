@@ -69,6 +69,47 @@ Object.defineProperty(window, 'IntersectionObserver', {
     value: IntersectionObserverMock,
 });
 
+// Mock ogl
+vi.mock('ogl', () => {
+    return {
+        Renderer: vi.fn().mockImplementation(function() {
+            return {
+                gl: {
+                    clearColor: vi.fn(),
+                    enable: vi.fn(),
+                    blendFunc: vi.fn(),
+                    canvas: document.createElement('canvas'),
+                    getExtension: vi.fn().mockReturnValue({ loseContext: vi.fn() }),
+                },
+                setSize: vi.fn(),
+                render: vi.fn(),
+            };
+        }),
+        Program: vi.fn().mockImplementation(function() {
+            return {
+                uniforms: {
+                    uTime: { value: 0 },
+                    uAmplitude: { value: 0 },
+                    uColorStops: { value: [] },
+                    uResolution: { value: [0, 0] },
+                    uBlend: { value: 0 },
+                },
+            };
+        }),
+        Mesh: vi.fn().mockImplementation(function() {
+            return {};
+        }),
+        Color: vi.fn().mockImplementation(function(hex) {
+            return { r: 0, g: 0, b: 0 };
+        }),
+        Triangle: vi.fn().mockImplementation(function() {
+            return {
+                attributes: { uv: {} },
+            };
+        }),
+    };
+});
+
 // Cleanup after each test case
 afterEach(() => {
     cleanup();

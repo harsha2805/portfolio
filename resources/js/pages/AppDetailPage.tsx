@@ -4,6 +4,7 @@ import { Link, useParams, Navigate } from 'react-router-dom';
 import { getAppById, type AppData, type AppFeature } from '@/data/apps';
 import { useTheme } from '@/context/ThemeContext';
 import ThemeToggle from '@/components/ThemeToggle';
+import Aurora from '@/components/ui/Aurora';
 
 /* ── Feature item ──────────────────────────────────────── */
 function FeatureItem({ feature, index, accentRgb }: { feature: AppFeature; index: number; accentRgb: string }) {
@@ -119,20 +120,32 @@ function AppDetail({ app }: { app: AppData }) {
             {/* ── Hero band ── */}
             <motion.div
                 variants={itemVariants}
-                className="relative rounded-2xl overflow-hidden"
+                className="relative rounded-2xl overflow-hidden min-h-[320px] flex items-center"
                 style={{
                     background: `linear-gradient(160deg, rgba(${app.accentRgb},0.04) 0%, var(--hs-surface) 40%)`,
                     border: '1px solid var(--hs-border)',
                     boxShadow: 'var(--hs-card-shadow)',
                 }}
             >
+                {/* Aurora Background */}
+                <div className="absolute inset-0 pointer-events-none opacity-30">
+                    <Aurora 
+                        colorStops={[
+                            `rgb(${app.accentRgb})`, 
+                            '#7cff67', 
+                            `rgb(${app.accentRgb})`
+                        ]} 
+                        amplitude={0.8}
+                    />
+                </div>
+
                 {/* Top accent line */}
                 <div
-                    className="h-px w-full"
+                    className="absolute top-0 left-0 h-px w-full z-10"
                     style={{ background: `linear-gradient(90deg, transparent, rgba(${app.accentRgb},0.3), transparent)` }}
                 />
 
-                <div className="p-8 md:p-10">
+                <div className="p-8 md:p-10 relative z-10 w-full">
                     <div className="flex flex-col md:flex-row md:items-center gap-6 md:gap-8">
                         {/* Icon + identity */}
                         <div className="flex items-center gap-5 flex-1 min-w-0">
