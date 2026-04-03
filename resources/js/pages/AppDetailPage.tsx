@@ -6,61 +6,82 @@ import { useTheme } from '@/context/ThemeContext';
 import ThemeToggle from '@/components/ThemeToggle';
 
 /* ── Feature item ──────────────────────────────────────── */
-function FeatureItem({ feature, index }: { feature: AppFeature; index: number }) {
+function FeatureItem({ feature, index, accentRgb }: { feature: AppFeature; index: number; accentRgb: string }) {
     const [open, setOpen] = useState(false);
+    const [mousePos, setMousePosition] = useState({ x: 0, y: 0 });
+
+    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        setMousePosition({
+            x: e.clientX - rect.left,
+            y: e.clientY - rect.top,
+        });
+    };
 
     return (
-        <motion.button
+        <motion.div
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-20px" }}
-            transition={{ duration: 0.5, delay: (index % 2) * 0.1 }}
-            whileHover={{ 
-                scale: 1.01, 
-                y: -2,
-                boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-                borderColor: 'rgba(var(--hs-accent-rgb), 0.3)'
-            }}
-            whileTap={{ scale: 0.99 }}
-            onClick={() => setOpen(!open)}
-            className="text-left rounded-xl p-4 transition-all duration-300 group w-full relative overflow-hidden"
-            style={{
-                border: '1px solid var(--hs-border)',
-                background: 'var(--hs-surface-hover)',
-            }}
+            transition={{ duration: 0.4, delay: (index % 2) * 0.05 }}
+            onMouseEnter={() => setOpen(true)}
+            onMouseLeave={() => setOpen(false)}
+            onMouseMove={handleMouseMove}
+            className="relative"
         >
-            <div className="flex items-start gap-3 relative z-10">
-                <span className="text-base mt-0.5 leading-none shrink-0 grayscale group-hover:grayscale-0 transition-all duration-300">{feature.icon}</span>
-                <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between gap-2">
-                        <span className="text-[13px] font-medium transition-colors group-hover:text-[var(--hs-text)]" style={{ color: 'var(--hs-text-secondary)' }}>{feature.title}</span>
-                        <motion.svg
-                            width="12" height="12" viewBox="0 0 24 24" fill="none"
-                            stroke="var(--hs-text-ghost)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                            animate={{ rotate: open ? 180 : 0 }}
-                            transition={{ duration: 0.2 }}
-                            className="shrink-0"
-                        >
-                            <path d="M6 9l6 6 6-6" />
-                        </motion.svg>
-                    </div>
-                    <AnimatePresence>
-                        {open && (
-                            <motion.p
-                                initial={{ height: 0, opacity: 0 }}
-                                animate={{ height: 'auto', opacity: 1 }}
-                                exit={{ height: 0, opacity: 0 }}
-                                transition={{ duration: 0.3, ease: "easeOut" }}
-                                className="text-xs leading-relaxed mt-2 overflow-hidden"
-                                style={{ color: 'var(--hs-text-muted)' }}
+            <motion.div
+                whileHover={{ 
+                    y: -4,
+                    boxShadow: `0 12px 30px rgba(${accentRgb}, 0.15)`,
+                    borderColor: `rgba(${accentRgb}, 0.4)`
+                }}
+                className="text-left rounded-2xl p-5 transition-all duration-300 group w-full relative overflow-hidden cursor-pointer"
+                style={{
+                    border: '1px solid var(--hs-border)',
+                    background: 'var(--hs-surface-hover)',
+                }}
+            >
+                {/* Extraordinary hover glow */}
+                <div 
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                    style={{
+                        background: `radial-gradient(600px circle at ${mousePos.x}px ${mousePos.y}px, rgba(${accentRgb}, 0.08), transparent 40%)`
+                    }}
+                />
+
+                <div className="flex items-start gap-4 relative z-10">
+                    <span className="text-xl mt-0.5 leading-none shrink-0 grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-300">{feature.icon}</span>
+                    <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-2">
+                            <span className="text-[15px] font-semibold transition-colors group-hover:text-[var(--hs-text)]" style={{ color: 'var(--hs-text-secondary)' }}>{feature.title}</span>
+                            <motion.svg
+                                width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                stroke="var(--hs-text-ghost)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+                                animate={{ rotate: open ? 180 : 0, color: open ? `rgb(${accentRgb})` : 'var(--hs-text-ghost)' }}
+                                transition={{ duration: 0.2 }}
+                                className="shrink-0"
                             >
-                                {feature.desc}
-                            </motion.p>
-                        )}
-                    </AnimatePresence>
+                                <path d="M6 9l6 6 6-6" />
+                            </motion.svg>
+                        </div>
+                        <AnimatePresence>
+                            {open && (
+                                <motion.p
+                                    initial={{ height: 0, opacity: 0 }}
+                                    animate={{ height: 'auto', opacity: 1 }}
+                                    exit={{ height: 0, opacity: 0 }}
+                                    transition={{ duration: 0.25, ease: [0.23, 1, 0.32, 1] }}
+                                    className="text-[13px] leading-relaxed mt-3 overflow-hidden"
+                                    style={{ color: 'var(--hs-text)', opacity: 0.9 }}
+                                >
+                                    {feature.desc}
+                                </motion.p>
+                            )}
+                        </AnimatePresence>
+                    </div>
                 </div>
-            </div>
-        </motion.button>
+            </motion.div>
+        </motion.div>
     );
 }
 
@@ -214,15 +235,15 @@ function AppDetail({ app }: { app: AppData }) {
                     {/* About */}
                     <div className="rounded-2xl p-7 md:p-8" style={{ border: '1px solid var(--hs-border)', background: 'var(--hs-surface)', boxShadow: 'var(--hs-card-shadow)' }}>
                         <h3 className="text-xs font-mono tracking-[0.2em] uppercase mb-4" style={{ color: 'var(--hs-text-muted)' }}>About</h3>
-                        <p className="text-[14px] leading-[1.85]" style={{ color: 'var(--hs-text-secondary)' }}>{app.description}</p>
+                        <p className="text-[15px] leading-[1.85] font-medium" style={{ color: 'var(--hs-text-secondary)' }}>{app.description}</p>
                     </div>
 
                     {/* Features */}
                     <div className="rounded-2xl p-7 md:p-8" style={{ border: '1px solid var(--hs-border)', background: 'var(--hs-surface)', boxShadow: 'var(--hs-card-shadow)' }}>
                         <h3 className="text-xs font-mono tracking-[0.2em] uppercase mb-5" style={{ color: 'var(--hs-text-muted)' }}>Features</h3>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             {app.features.map((f, i) => (
-                                <FeatureItem key={i} feature={f} index={i} />
+                                <FeatureItem key={i} feature={f} index={i} accentRgb={app.accentRgb} />
                             ))}
                         </div>
                     </div>
