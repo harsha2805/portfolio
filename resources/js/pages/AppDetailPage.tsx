@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, useMotionValue, useSpring } from 'motion/react';
 import { useState, useEffect, useRef } from 'react';
 import { Link, useParams, Navigate } from 'react-router-dom';
 import axios from 'axios';
@@ -100,14 +100,18 @@ function ProductTestimonials({ accentRgb }: { accentRgb: string }) {
 /* ── Feature item ──────────────────────────────────────── */
 function FeatureItem({ feature, index, accentRgb }: { feature: AppFeature; index: number; accentRgb: string }) {
     const [open, setOpen] = useState(false);
-    const [mousePos, setMousePosition] = useState({ x: 0, y: 0 });
+    
+    // Performance optimized mouse tracking
+    const mouseX = useMotionValue(0);
+    const mouseY = useMotionValue(0);
+    
+    const springX = useSpring(mouseX, { stiffness: 500, damping: 50 });
+    const springY = useSpring(mouseY, { stiffness: 500, damping: 50 });
 
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
         const rect = e.currentTarget.getBoundingClientRect();
-        setMousePosition({
-            x: e.clientX - rect.left,
-            y: e.clientY - rect.top,
-        });
+        mouseX.set(e.clientX - rect.left);
+        mouseY.set(e.clientY - rect.top);
     };
 
     return (
@@ -134,11 +138,14 @@ function FeatureItem({ feature, index, accentRgb }: { feature: AppFeature; index
                 }}
             >
                 {/* Extraordinary hover glow */}
-                <div 
+                <motion.div 
                     className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
                     style={{
-                        background: `radial-gradient(600px circle at ${mousePos.x}px ${mousePos.y}px, rgba(${accentRgb}, 0.08), transparent 40%)`
-                    }}
+                        background: `radial-gradient(600px circle at var(--x) var(--y), rgba(${accentRgb}, 0.08), transparent 40%)`,
+                        // @ts-ignore
+                        '--x': springX,
+                        '--y': springY
+                    } as any}
                 />
 
                 <div className="flex items-start gap-4 relative z-10">
